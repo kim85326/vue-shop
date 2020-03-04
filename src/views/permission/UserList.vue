@@ -1,0 +1,243 @@
+<template>
+	<div>
+		<el-card
+			shadow="never"
+			class="filter-container"
+		>
+			<div class="filter">
+				<div class="filter-header">
+					<div class="filter-title">
+						<i class="el-icon-search"></i>
+						<span>篩選搜尋</span>
+					</div>
+					<div class="filter-operation">
+						<el-button size="mini">
+							重置
+						</el-button>
+						<el-button
+							size="mini"
+							type="primary"
+						>
+							查詢
+						</el-button>
+					</div>
+				</div>
+				<div class="filter-body">
+					<el-form
+						:inline="true"
+						:model="listQuery"
+					>
+						<el-form-item label="輸入搜尋：">
+							<el-input
+								size="small"
+								v-model="listQuery.keyword"
+								placeholder="帳號/姓名"
+							></el-input>
+						</el-form-item>
+					</el-form>
+				</div>
+			</div>
+		</el-card>
+		<el-card
+			shadow="never"
+			class="operation-container"
+		>
+			<div class="operation">
+				<div class="operation-title">
+					<i class="el-icon-tickets"></i>
+					<span>資料列表</span>
+				</div>
+				<el-button size="mini">
+					新增
+				</el-button>
+			</div>
+		</el-card>
+		<el-table
+			:data="tableData"
+			border
+			style="width: 100%"
+		>
+			<el-table-column
+				prop="id"
+				label="編號"
+				width="70"
+				align="center"
+			>
+			</el-table-column>
+			<el-table-column
+				prop="username"
+				label="帳號"
+				align="center"
+			>
+			</el-table-column>
+			<el-table-column
+				prop="name"
+				label="姓名"
+				width="130"
+				align="center"
+			>
+			</el-table-column>
+			<el-table-column
+				prop="email"
+				label="信箱"
+				align="center"
+			>
+			</el-table-column>
+			<el-table-column
+				prop="createdTime"
+				label="建立時間"
+				width="180"
+				align="center"
+			>
+			</el-table-column>
+			<el-table-column
+				prop="lastestLoginTime"
+				label="最後登入"
+				width="180"
+				align="center"
+			>
+			</el-table-column>
+			<el-table-column
+				label="是否啟用"
+				width="120"
+				align="center"
+			>
+				<template slot-scope="scope">
+					<el-switch v-model="scope.row.isEnabled">
+					</el-switch>
+				</template>
+			</el-table-column>
+			<el-table-column
+				label="操作"
+				width="180"
+				align="center"
+			>
+				<template>
+					<el-button
+						size="mini"
+						type="text"
+					>
+						分配角色
+					</el-button>
+					<el-button
+						size="mini"
+						type="text"
+					>
+						編輯
+					</el-button>
+					<el-button
+						size="mini"
+						type="text"
+					>
+						刪除
+					</el-button>
+				</template>
+			</el-table-column>
+		</el-table>
+		<div class="pagination">
+			<el-pagination
+				background
+				:current-page="pagination.currentPage"
+				:page-sizes="[10, 15, 20]"
+				:page-size="pagination.pageSize"
+				layout="total, sizes, prev, pager, next, jumper"
+				:total="pagination.total"
+			>
+			</el-pagination>
+		</div>
+	</div>
+</template>
+
+<script>
+export default {
+	data() {
+		return {
+			listQuery: {
+				keyword: ""
+			},
+			tableData: [
+				{
+					id: 1,
+					username: "hello123",
+					name: "李正赫",
+					email: "hello123@gmail.com",
+					createdTime: "2018-09-29 13:55:30",
+					lastestLoginTime: "2018-09-29 13:55:39",
+					isEnabled: true
+				},
+				{
+					id: 2,
+					username: "elaine123",
+					name: "尹世理",
+					email: "elaine@gmail.com",
+					createdTime: "2019-10-06 15:02:51",
+					lastestLoginTime: "2019-10-06 15:53:51",
+					isEnabled: true
+				},
+				{
+					id: 3,
+					username: "hi123",
+					name: "徐丹",
+					email: "h123@gmail.com",
+					createdTime: "2018-09-29 13:55:30",
+					lastestLoginTime: null,
+					isEnabled: false
+				},
+				{
+					id: 50,
+					username: "ssssssskkkkkkkkk123",
+					name: "阿爾貝托",
+					email: "dddddeeeeeeeeeegggggg123@gmail.com",
+					createdTime: "2019-04-20 12:45:16",
+					lastestLoginTime: null,
+					isEnabled: true
+				}
+			],
+			pagination: {
+				total: 17,
+				pageSize: 2,
+				currentPage: 1
+			}
+		};
+	},
+};
+</script>
+
+<style>
+.filter-container,
+.operation-container {
+	margin-bottom: 20px;
+}
+
+.filter-header,
+.operation {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.filter-title,
+.operation-title {
+	display: flex;
+}
+
+.filter-title i,
+.operation-title i {
+	margin-right: 6px;
+}
+
+.filter-body {
+	margin-top: 8px;
+	padding-left: 32px;
+}
+
+.filter .el-form--inline .el-form-item {
+	margin-bottom: 0;
+}
+
+.pagination {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 20px;
+}
+</style>

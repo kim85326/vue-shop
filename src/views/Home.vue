@@ -7,7 +7,9 @@
 			<el-header>
 				<Header />
 			</el-header>
-			<el-main>Main</el-main>
+			<el-main>
+				<UserList></UserList>
+			</el-main>
 		</el-container>
 	</el-container>
 </template>
@@ -15,11 +17,13 @@
 <script>
 import Aside from "@/components/home/Aside.vue";
 import Header from "@/components/home/Header.vue";
+import UserList from "./permission/UserList.vue";
 
 export default {
 	components: {
 		Aside,
-		Header
+		Header,
+		UserList
 	}
 };
 </script>
