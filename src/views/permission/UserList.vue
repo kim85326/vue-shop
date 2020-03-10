@@ -237,7 +237,8 @@ export default {
 					password: "777777777",
 					createdTime: "2018-09-29 13:55:30",
 					lastestLoginTime: "2018-09-29 13:55:39",
-					isEnabled: true
+					isEnabled: true,
+					remark: "朝鮮人民軍總政治局局長的小兒子，現任民警大隊第五中隊大尉中隊長"
 				},
 				{
 					id: 2,
@@ -247,7 +248,8 @@ export default {
 					password: "qwertyu",
 					createdTime: "2019-10-06 15:02:51",
 					lastestLoginTime: "2019-10-06 15:53:51",
-					isEnabled: true
+					isEnabled: true,
+					remark: "韓國女王集團會長的小女兒"
 				},
 				{
 					id: 3,
@@ -257,7 +259,8 @@ export default {
 					password: "zxcvbnmsdfghjkertyuio",
 					createdTime: "2018-09-29 13:55:30",
 					lastestLoginTime: null,
-					isEnabled: false
+					isEnabled: false,
+					remark: ""
 				},
 				{
 					id: 50,
@@ -267,7 +270,8 @@ export default {
 					password: "1qaz2wsx3edc",
 					createdTime: "2019-04-20 12:45:16",
 					lastestLoginTime: null,
-					isEnabled: true
+					isEnabled: true,
+					remark: "英籍企業家，打算與世理結婚"
 				}
 			],
 			pagination: {
