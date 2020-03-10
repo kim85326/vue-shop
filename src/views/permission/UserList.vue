@@ -47,7 +47,10 @@
 					<i class="el-icon-tickets"></i>
 					<span>資料列表</span>
 				</div>
-				<el-button size="mini">
+				<el-button
+					size="mini"
+					@click="handleAdd"
+				>
 					新增
 				</el-button>
 			</div>
@@ -112,7 +115,7 @@
 				width="180"
 				align="center"
 			>
-				<template>
+				<template slot-scope="scope">
 					<el-button
 						size="mini"
 						type="text"
@@ -122,6 +125,7 @@
 					<el-button
 						size="mini"
 						type="text"
+						@click="handleUpdate(scope.row)"
 					>
 						編輯
 					</el-button>
@@ -145,10 +149,79 @@
 			>
 			</el-pagination>
 		</div>
+		<el-dialog
+			:title="isUpdateMode? '編輯用戶' : '新增用戶'"
+			:visible.sync="isUserDialogVisible"
+			class="user-dialog"
+		>
+			<el-form
+				ref="form"
+				:model="userForm"
+				size="small"
+				label-width="150px"
+			>
+				<el-form-item label="帳號：">
+					<el-input v-model="userForm.username"></el-input>
+				</el-form-item>
+				<el-form-item label="姓名：">
+					<el-input v-model="userForm.name"></el-input>
+				</el-form-item>
+				<el-form-item label="信箱：">
+					<el-input v-model="userForm.email"></el-input>
+				</el-form-item>
+				<el-form-item label="密碼：">
+					<el-input
+						type="password"
+						v-model="userForm.password"
+					></el-input>
+				</el-form-item>
+				<el-form-item label="備註：">
+					<el-input
+						type="textarea"
+						v-model="userForm.remark"
+						:rows="5"
+					></el-input>
+				</el-form-item>
+				<el-form-item label="是否啟用：">
+					<el-radio
+						v-model="userForm.isEnabled"
+						:label="true"
+					>是</el-radio>
+					<el-radio
+						v-model="userForm.isEnabled"
+						:label="false"
+					>否</el-radio>
+				</el-form-item>
+			</el-form>
+			<div
+				slot="footer"
+				class="dialog-footer"
+			>
+				<el-button
+					size="small"
+					@click="isUserDialogVisible = false"
+				>取 消</el-button>
+				<el-button
+					size="small"
+					type="primary"
+					@click="handleSubmitUserDialog"
+				>確 定</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 
 <script>
+const defaultUserForm = {
+	id: 0,
+	username: "",
+	name: "",
+	email: "",
+	password: "",
+	remark: "",
+	isEnabled: true
+};
+
 export default {
 	data() {
 		return {
@@ -161,6 +234,7 @@ export default {
 					username: "hello123",
 					name: "李正赫",
 					email: "hello123@gmail.com",
+					password: "777777777",
 					createdTime: "2018-09-29 13:55:30",
 					lastestLoginTime: "2018-09-29 13:55:39",
 					isEnabled: true
@@ -170,6 +244,7 @@ export default {
 					username: "elaine123",
 					name: "尹世理",
 					email: "elaine@gmail.com",
+					password: "qwertyu",
 					createdTime: "2019-10-06 15:02:51",
 					lastestLoginTime: "2019-10-06 15:53:51",
 					isEnabled: true
@@ -179,6 +254,7 @@ export default {
 					username: "hi123",
 					name: "徐丹",
 					email: "h123@gmail.com",
+					password: "zxcvbnmsdfghjkertyuio",
 					createdTime: "2018-09-29 13:55:30",
 					lastestLoginTime: null,
 					isEnabled: false
@@ -188,6 +264,7 @@ export default {
 					username: "ssssssskkkkkkkkk123",
 					name: "阿爾貝托",
 					email: "dddddeeeeeeeeeegggggg123@gmail.com",
+					password: "1qaz2wsx3edc",
 					createdTime: "2019-04-20 12:45:16",
 					lastestLoginTime: null,
 					isEnabled: true
@@ -197,9 +274,52 @@ export default {
 				total: 17,
 				pageSize: 2,
 				currentPage: 1
-			}
+			},
+			isUserDialogVisible: false,
+			userForm: defaultUserForm
 		};
 	},
+	methods: {
+		handleAdd() {
+			this.isUserDialogVisible = true;
+			this.userForm = defaultUserForm;
+		},
+		handleUpdate(row) {
+			this.isUserDialogVisible = true;
+			this.userForm = row;
+		},
+		handleSubmitUserDialog() {
+			this.$confirm("是否要確認?", "提示", {
+				confirmButtonText: "確認",
+				cancelButtonText: "取消",
+				type: "warning"
+			})
+				.then(() => {
+					if (this.isUpdateMode === false) {
+						// TODO: 新增使用者
+						this.$message({
+							message: "新增成功！",
+							type: "success"
+						});
+						this.isUserDialogVisible = false;
+						// TODO: 重新取得列表
+					} else {
+						// TODO: 更新使用者
+						this.$message({
+							message: "編輯成功！",
+							type: "success"
+						});
+						this.isUserDialogVisible = false;
+						// TODO: 重新取得列表
+					}
+				});
+		}
+	},
+	computed: {
+		isUpdateMode() {
+			return this.userForm.id !== 0;
+		}
+	}
 };
 </script>
 
@@ -239,5 +359,14 @@ export default {
 	display: flex;
 	justify-content: flex-end;
 	margin-top: 20px;
+}
+
+.user-dialog .el-dialog {
+	width: 540px;
+}
+
+.user-dialog input,
+.user-dialog textarea {
+	width: 250px;
 }
 </style>
