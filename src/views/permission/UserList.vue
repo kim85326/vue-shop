@@ -132,6 +132,7 @@
 					<el-button
 						size="mini"
 						type="text"
+						@click="handleDelete(scope.row)"
 					>
 						刪除
 					</el-button>
@@ -291,6 +292,21 @@ export default {
 		handleUpdate(row) {
 			this.isUserDialogVisible = true;
 			this.userForm = row;
+		},
+		handleDelete(row) {
+			this.$confirm("是否刪除該用戶？", "提示", {
+				confirmButtonText: "確定",
+				cancelButtonText: "取消",
+				type: "warning"
+			}).then(() => {
+				// TODO: 刪除用戶
+				console.log(row.id);
+				this.$message({
+					message: "刪除成功!",
+					type: "success"
+				});
+				// TODO: 重新取得列表
+			});
 		},
 		handleSubmitUserDialog() {
 			this.$confirm("是否要確認?", "提示", {
