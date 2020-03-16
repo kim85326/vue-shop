@@ -110,7 +110,10 @@
 				align="center"
 			>
 				<template slot-scope="scope">
-					<el-switch v-model="scope.row.isEnabled">
+					<el-switch
+						v-model="scope.row.isEnabled"
+						@change="handleIsEnbaleChange(scope.row)"
+					>
 					</el-switch>
 				</template>
 			</el-table-column>
@@ -445,6 +448,27 @@ export default {
 				});
 				this.isAllocateRoleDialogVisible = false;
 			});
+		},
+		handleIsEnbaleChange(user) {
+			const operationText = user.isEnabled === true ? "啟用" : "停用";
+
+			this.$confirm(`是否要${operationText}此用戶?`, "提示", {
+				confirmButtonText: "確認",
+				cancelButtonText: "取消",
+				type: "warning"
+			}).then(() => {
+				// TODO: 啟停用使用者
+				this.$message({
+					message: `${operationText}成功！`,
+					type: "success"
+				});
+			}).catch(() => {
+				this.$message({
+					type: "info",
+					message: `取消${operationText}`
+				});
+				// TODO: 重新取得列表
+			});;
 		}
 	},
 	computed: {
