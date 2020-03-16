@@ -20,6 +20,7 @@
 						<el-button
 							size="mini"
 							type="primary"
+							@click="handleSearchList"
 						>
 							查詢
 						</el-button>
@@ -292,6 +293,10 @@ export default {
 	methods: {
 		handleResetFilter() {
 			this.listQuery.keyword = "";
+		},
+		handleSearchList() {
+			this.pagination.currentPage = 1;
+			// TODO: 重新取得列表
 		},
 		handlePageSizeChange(pageSize) {
 			this.pagination.pageSize = pageSize;
