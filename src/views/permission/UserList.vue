@@ -150,6 +150,8 @@
 				:page-size="pagination.pageSize"
 				layout="total, sizes, prev, pager, next, jumper"
 				:total="pagination.total"
+				@size-change="handlePageSizeChange"
+				@current-change="handleCurrentPageChange"
 			>
 			</el-pagination>
 		</div>
@@ -290,6 +292,15 @@ export default {
 	methods: {
 		handleResetFilter() {
 			this.listQuery.keyword = "";
+		},
+		handlePageSizeChange(pageSize) {
+			this.pagination.pageSize = pageSize;
+			this.pagination.currentPage = 1;
+			// TODO: 重新取得列表
+		},
+		handleCurrentPageChange(page) {
+			this.pagination.currentPage = page;
+			// TODO: 重新取得列表
 		},
 		handleAdd() {
 			this.isUserDialogVisible = true;
