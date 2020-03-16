@@ -11,7 +11,10 @@
 						<span>篩選搜尋</span>
 					</div>
 					<div class="filter-operation">
-						<el-button size="mini">
+						<el-button
+							size="mini"
+							@click="handleResetFilter"
+						>
 							重置
 						</el-button>
 						<el-button
@@ -285,6 +288,9 @@ export default {
 		};
 	},
 	methods: {
+		handleResetFilter() {
+			this.listQuery.keyword = "";
+		},
 		handleAdd() {
 			this.isUserDialogVisible = true;
 			this.userForm = defaultUserForm;
