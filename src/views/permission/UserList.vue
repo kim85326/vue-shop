@@ -99,7 +99,7 @@
 			>
 			</el-table-column>
 			<el-table-column
-				prop="lastestLoginTime"
+				prop="latestLoginTime"
 				label="最後登入"
 				width="180"
 				align="center"
