@@ -263,7 +263,7 @@
 </template>
 
 <script>
-import getUserListApi from "../../api/user";
+import { getUserListApi, setUserEnabledApi } from "../../api/user";
 import getPaginationFromHeaders from "../../utils/headers";
 
 const defaultPagination = {
@@ -435,26 +435,29 @@ export default {
 				this.isAllocateRoleDialogVisible = false;
 			});
 		},
-		handleIsEnbaleChange(user) {
-			const operationText = user.isEnabled === true ? "啟用" : "停用";
+		async setUserEnabled(id, isEnabled) {
+			try {
+				await setUserEnabledApi(id, isEnabled);
 
-			this.$confirm(`是否要${operationText}此用戶?`, "提示", {
+				this.$message({
+					message: `${isEnabled === true ? "啟用" : "停用"}用戶成功！`,
+					type: "success"
+				});
+			} catch (error) {
+				console.error(error);
+				const message = error.response.data.error_message || "未知錯誤";
+				this.$message({ type: "error", message });
+				this.fetchUserList();
+			}
+		},
+		handleIsEnbaleChange(user) {
+			this.$confirm(`是否要${user.isEnabled === true ? "啟用" : "停用"}此用戶?`, "提示", {
 				confirmButtonText: "確認",
 				cancelButtonText: "取消",
 				type: "warning"
-			}).then(() => {
-				// TODO: 啟停用使用者
-				this.$message({
-					message: `${operationText}成功！`,
-					type: "success"
-				});
-			}).catch(() => {
-				this.$message({
-					type: "info",
-					message: `取消${operationText}`
-				});
-				this.fetchUserList();
-			});;
+			}).then(async () => {
+				await this.setUserEnabled(user.id, user.isEnabled);
+			});
 		}
 	},
 	computed: {

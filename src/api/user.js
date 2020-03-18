@@ -1,6 +1,6 @@
 import request from "../utils/request";
 
-const getUserListApi = params => {
+export const getUserListApi = params => {
   return request({
     method: "get",
     url: "/users",
@@ -8,4 +8,9 @@ const getUserListApi = params => {
   });
 };
 
-export default getUserListApi;
+export const setUserEnabledApi = (id, isEnabled) => {
+  return request({
+    method: isEnabled === true ? "put" : "delete",
+    url: `/users/${id}/enabled`
+  });
+};
