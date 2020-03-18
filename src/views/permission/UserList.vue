@@ -60,9 +60,10 @@
 			</div>
 		</el-card>
 		<el-table
-			:data="tableData"
+			:data="users"
 			border
 			style="width: 100%"
+			v-loading="isUserListLoading"
 		>
 			<el-table-column
 				prop="id"
@@ -151,7 +152,7 @@
 			<el-pagination
 				background
 				:current-page="pagination.currentPage"
-				:page-sizes="[10, 15, 20]"
+				:page-sizes="pagination.pageSizes"
 				:page-size="pagination.pageSize"
 				layout="total, sizes, prev, pager, next, jumper"
 				:total="pagination.total"
@@ -262,6 +263,16 @@
 </template>
 
 <script>
+import getUserListApi from "../../api/user";
+import getPaginationFromHeaders from "../../utils/headers";
+
+const defaultPagination = {
+	pageSizes: [2, 5, 10],
+	pageSize: 10,
+	currentPage: 1,
+	total: 0,
+};
+
 const defaultUserForm = {
 	id: 0,
 	username: "",
@@ -279,60 +290,12 @@ const defaultAllocateRoleForm = {
 export default {
 	data() {
 		return {
+			isUserListLoading: false,
 			listQuery: {
 				keyword: ""
 			},
-			tableData: [
-				{
-					id: 1,
-					username: "hello123",
-					name: "李正赫",
-					email: "hello123@gmail.com",
-					password: "777777777",
-					createdTime: "2018-09-29 13:55:30",
-					lastestLoginTime: "2018-09-29 13:55:39",
-					isEnabled: true,
-					remark: "朝鮮人民軍總政治局局長的小兒子，現任民警大隊第五中隊大尉中隊長"
-				},
-				{
-					id: 2,
-					username: "elaine123",
-					name: "尹世理",
-					email: "elaine@gmail.com",
-					password: "qwertyu",
-					createdTime: "2019-10-06 15:02:51",
-					lastestLoginTime: "2019-10-06 15:53:51",
-					isEnabled: true,
-					remark: "韓國女王集團會長的小女兒"
-				},
-				{
-					id: 3,
-					username: "hi123",
-					name: "徐丹",
-					email: "h123@gmail.com",
-					password: "zxcvbnmsdfghjkertyuio",
-					createdTime: "2018-09-29 13:55:30",
-					lastestLoginTime: null,
-					isEnabled: false,
-					remark: ""
-				},
-				{
-					id: 50,
-					username: "ssssssskkkkkkkkk123",
-					name: "阿爾貝托",
-					email: "dddddeeeeeeeeeegggggg123@gmail.com",
-					password: "1qaz2wsx3edc",
-					createdTime: "2019-04-20 12:45:16",
-					lastestLoginTime: null,
-					isEnabled: true,
-					remark: "英籍企業家，打算與世理結婚"
-				}
-			],
-			pagination: {
-				total: 17,
-				pageSize: 2,
-				currentPage: 1
-			},
+			users: [],
+			pagination: defaultPagination,
 			isUserDialogVisible: false,
 			userForm: defaultUserForm,
 			isAllocateRoleDialogVisible: false,
@@ -354,21 +317,44 @@ export default {
 		};
 	},
 	methods: {
+		async fetchUserList() {
+			try {
+				this.isUserListLoading = true;
+
+				const params = new URLSearchParams();
+				params.append("page", this.pagination.currentPage);
+				params.append("pageSize", this.pagination.pageSize);
+
+				const { data, headers } = await getUserListApi(params);
+
+				this.users = data;
+				this.pagination = {
+					...this.pagination,
+					...getPaginationFromHeaders(headers)
+				};
+			} catch (error) {
+				console.error(error);
+				const message = error.response.data.error_message || "未知錯誤";
+				this.$message({ type: "error", message });
+			} finally {
+				this.isUserListLoading = false;
+			}
+		},
 		handleResetFilter() {
 			this.listQuery.keyword = "";
 		},
 		handleSearchList() {
 			this.pagination.currentPage = 1;
-			// TODO: 重新取得列表
+			this.fetchUserList();
 		},
 		handlePageSizeChange(pageSize) {
 			this.pagination.pageSize = pageSize;
 			this.pagination.currentPage = 1;
-			// TODO: 重新取得列表
+			this.fetchUserList();
 		},
 		handleCurrentPageChange(page) {
 			this.pagination.currentPage = page;
-			// TODO: 重新取得列表
+			this.fetchUserList();
 		},
 		handleAdd() {
 			this.isUserDialogVisible = true;
@@ -390,7 +376,7 @@ export default {
 					message: "刪除成功!",
 					type: "success"
 				});
-				// TODO: 重新取得列表
+				this.fetchUserList();
 			});
 		},
 		handleSubmitUserDialog() {
@@ -407,7 +393,7 @@ export default {
 							type: "success"
 						});
 						this.isUserDialogVisible = false;
-						// TODO: 重新取得列表
+						this.fetchUserList();
 					} else {
 						// TODO: 更新使用者
 						this.$message({
@@ -415,7 +401,7 @@ export default {
 							type: "success"
 						});
 						this.isUserDialogVisible = false;
-						// TODO: 重新取得列表
+						this.fetchUserList();
 					}
 				});
 		},
@@ -467,7 +453,7 @@ export default {
 					type: "info",
 					message: `取消${operationText}`
 				});
-				// TODO: 重新取得列表
+				this.fetchUserList();
 			});;
 		}
 	},
@@ -475,6 +461,9 @@ export default {
 		isUpdateMode() {
 			return this.userForm.id !== 0;
 		}
+	},
+	created() {
+		this.fetchUserList();
 	}
 };
 </script>
