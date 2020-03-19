@@ -321,9 +321,11 @@ export default {
 			try {
 				this.isUserListLoading = true;
 
-				const params = new URLSearchParams();
-				params.append("page", this.pagination.currentPage);
-				params.append("pageSize", this.pagination.pageSize);
+				const params = {
+					page: this.pagination.currentPage,
+					pageSize: this.pagination.pageSize,
+					keyword: this.listQuery.keyword.trim() ? this.listQuery.keyword.trim() : undefined
+				};
 
 				const { data, headers } = await getUserListApi(params);
 
