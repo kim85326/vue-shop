@@ -263,7 +263,7 @@
 </template>
 
 <script>
-import { getUserListApi, setUserEnabledApi } from "../../api/user";
+import { getUserListApi, setUserEnabledApi, deleteUserApi } from "../../api/user";
 import getPaginationFromHeaders from "../../utils/headers";
 
 const defaultPagination = {
@@ -366,19 +366,28 @@ export default {
 			this.isUserDialogVisible = true;
 			this.userForm = row;
 		},
-		handleDelete(row) {
-			this.$confirm("是否刪除該用戶？", "提示", {
-				confirmButtonText: "確定",
-				cancelButtonText: "取消",
-				type: "warning"
-			}).then(() => {
-				// TODO: 刪除用戶
-				console.log(row.id);
+		async deleteUser(id) {
+			try {
+				await deleteUserApi(id);
+
 				this.$message({
 					message: "刪除成功!",
 					type: "success"
 				});
 				this.fetchUserList();
+			} catch (error) {
+				console.error(error);
+				const message = error.response.data.error_message || "未知錯誤";
+				this.$message({ type: "error", message });
+			}
+		},
+		handleDelete(row) {
+			this.$confirm("是否刪除該用戶？", "提示", {
+				confirmButtonText: "確定",
+				cancelButtonText: "取消",
+				type: "warning"
+			}).then(async () => {
+				await this.deleteUser(row.id);
 			});
 		},
 		handleSubmitUserDialog() {

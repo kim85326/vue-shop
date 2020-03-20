@@ -14,3 +14,10 @@ export const setUserEnabledApi = (id, isEnabled) => {
     url: `/users/${id}/enabled`
   });
 };
+
+export const deleteUserApi = id => {
+  return request({
+    method: "delete",
+    url: `/users/${id}`
+  });
+};
