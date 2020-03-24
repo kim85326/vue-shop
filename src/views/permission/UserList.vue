@@ -120,17 +120,10 @@
 			</el-table-column>
 			<el-table-column
 				label="操作"
-				width="180"
+				width="120"
 				align="center"
 			>
 				<template slot-scope="scope">
-					<el-button
-						size="mini"
-						type="text"
-						@click="handleAllocateRole(scope.row)"
-					>
-						分配角色
-					</el-button>
 					<el-button
 						size="mini"
 						type="text"
@@ -239,45 +232,6 @@
 				>確 定</el-button>
 			</div>
 		</el-dialog>
-		<el-dialog
-			title="分配角色"
-			:visible.sync="isAllocateRoleDialogVisible"
-			class="allocate-role-dialog"
-		>
-			<el-form
-				ref="form"
-				:model="allocateRoleForm"
-				size="small"
-			>
-				<el-select
-					v-model="allocateRoleForm.roles"
-					multiple
-					placeholder="請選擇"
-				>
-					<el-option
-						v-for="role in selectableRoles"
-						:key="role.id"
-						:label="role.name"
-						:value="role.id"
-					>
-					</el-option>
-				</el-select>
-			</el-form>
-			<div
-				slot="footer"
-				class="dialog-footer"
-			>
-				<el-button
-					size="small"
-					@click="isAllocateRoleDialogVisible = false"
-				>取 消</el-button>
-				<el-button
-					size="small"
-					type="primary"
-					@click="handleSubmitAllocateRoleDialog"
-				>確 定</el-button>
-			</div>
-		</el-dialog>
 	</div>
 </template>
 
@@ -302,10 +256,6 @@ const defaultUserForm = {
 	isEnabled: true
 };
 
-const defaultAllocateRoleForm = {
-	roles: [],
-};
-
 export default {
 	data() {
 		return {
@@ -317,22 +267,6 @@ export default {
 			pagination: defaultPagination,
 			isUserDialogVisible: false,
 			userForm: { ...defaultUserForm },
-			isAllocateRoleDialogVisible: false,
-			allocateRoleForm: defaultAllocateRoleForm,
-			selectableRoles: [
-				{
-					id: 1,
-					name: "超級管理員"
-				},
-				{
-					id: 2,
-					name: "商品管理員"
-				},
-				{
-					id: 4,
-					name: "訂單管理員"
-				}
-			],
 		};
 	},
 	methods: {
@@ -477,36 +411,6 @@ export default {
 				});
 			}
 		},
-		handleAllocateRole(row) {
-			this.isAllocateRoleDialogVisible = true;
-			const roles = this.getRolesByUserId(row.id);
-			this.allocateRoleForm.roleIds = roles.map((role) => role.id);
-		},
-		getRolesByUserId(id) {
-			// TODO: 透過使用者編號取得該使用者的角色列表
-			console.log(id);
-			const roles = [
-				{
-					id: 1,
-					name: "超級管理員"
-				}
-			];
-			return roles;
-		},
-		handleSubmitAllocateRoleDialog() {
-			this.$confirm("是否要確認?", "提示", {
-				confirmButtonText: "確認",
-				cancelButtonText: "取消",
-				type: "warning"
-			}).then(() => {
-				// TODO: 分配角色
-				this.$message({
-					message: "分配角色成功！",
-					type: "success"
-				});
-				this.isAllocateRoleDialogVisible = false;
-			});
-		},
 		async setUserEnabled(id, isEnabled) {
 			try {
 				await setUserEnabledApi(id, isEnabled);
@@ -591,14 +495,6 @@ export default {
 .user-dialog .el-input,
 .user-dialog .el-textarea {
 	width: 250px;
-}
-
-.allocate-role-dialog .el-dialog {
-	width: 500px;
-}
-
-.allocate-role-dialog .el-select {
-	width: 80%;
 }
 
 .error input {
