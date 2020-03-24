@@ -173,18 +173,41 @@
 				label-width="150px"
 			>
 				<el-form-item label="帳號：">
-					<el-input v-model="userForm.username"></el-input>
+					<el-input
+						v-model="userForm.username"
+						v-validate="{ required: true }"
+						name="username"
+						:class="{ error: errors.has('username') }"
+					></el-input>
 				</el-form-item>
 				<el-form-item label="姓名：">
-					<el-input v-model="userForm.name"></el-input>
+					<el-input
+						v-model="userForm.name"
+						v-validate="{ required: true }"
+						name="name"
+						:class="{ error: errors.has('name') }"
+					></el-input>
 				</el-form-item>
 				<el-form-item label="信箱：">
-					<el-input v-model="userForm.email"></el-input>
+					<el-input
+						v-model="userForm.email"
+						v-validate="{ required: true, email: true }"
+						name="email"
+						:class="{ error: errors.has('email') }"
+					></el-input>
 				</el-form-item>
 				<el-form-item label="密碼：">
 					<el-input
 						type="password"
 						v-model="userForm.password"
+						v-validate="{ required: isUserFormPasswordEnabled }"
+						name="password"
+						:class="{ error: errors.has('password') }"
+						:placeholder="isUserFormPasswordEnabled === false? '點擊解鎖' : null"
+						:readonly="isUserFormPasswordEnabled === false"
+						@focus="changeUserPassword()"
+						ref="passwordInput"
+						show-password
 					></el-input>
 				</el-form-item>
 				<el-form-item label="備註：">
@@ -195,14 +218,10 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item label="是否啟用：">
-					<el-radio
-						v-model="userForm.isEnabled"
-						:label="true"
-					>是</el-radio>
-					<el-radio
-						v-model="userForm.isEnabled"
-						:label="false"
-					>否</el-radio>
+					<el-radio-group v-model="userForm.isEnabled">
+						<el-radio :label="true">是</el-radio>
+						<el-radio :label="false">否</el-radio>
+					</el-radio-group>
 				</el-form-item>
 			</el-form>
 			<div
@@ -263,7 +282,7 @@
 </template>
 
 <script>
-import { getUserListApi, setUserEnabledApi, deleteUserApi } from "../../api/user";
+import { getUserListApi, addUserApi, updateUserApi, setUserEnabledApi, deleteUserApi } from "../../api/user";
 import getPaginationFromHeaders from "../../utils/headers";
 
 const defaultPagination = {
@@ -297,7 +316,7 @@ export default {
 			users: [],
 			pagination: defaultPagination,
 			isUserDialogVisible: false,
-			userForm: defaultUserForm,
+			userForm: { ...defaultUserForm },
 			isAllocateRoleDialogVisible: false,
 			allocateRoleForm: defaultAllocateRoleForm,
 			selectableRoles: [
@@ -360,11 +379,14 @@ export default {
 		},
 		handleAdd() {
 			this.isUserDialogVisible = true;
-			this.userForm = defaultUserForm;
+			this.userForm = { ...defaultUserForm };
+			this.$validator.reset();
 		},
 		handleUpdate(row) {
 			this.isUserDialogVisible = true;
-			this.userForm = row;
+			this.userForm = { ...row };
+			this.$validator.reset();
+			this.$set(this.userForm, "password", undefined);
 		},
 		async deleteUser(id) {
 			try {
@@ -390,31 +412,70 @@ export default {
 				await this.deleteUser(row.id);
 			});
 		},
-		handleSubmitUserDialog() {
+		async addUser(user) {
+			try {
+				await addUserApi(user);
+
+				this.$message({
+					message: "新增成功!",
+					type: "success"
+				});
+
+				this.isUserDialogVisible = false;
+				this.fetchUserList();
+			} catch (error) {
+				console.error(error);
+				const message = error.response.data.error_message || "未知錯誤";
+				this.$message({ type: "error", message });
+			}
+		},
+		async updateUser(user) {
+			try {
+				await updateUserApi(user);
+
+				this.$message({
+					message: "編輯成功!",
+					type: "success"
+				});
+
+				this.isUserDialogVisible = false;
+				this.fetchUserList();
+			} catch (error) {
+				console.error(error);
+				const message = error.response.data.error_message || "未知錯誤";
+				this.$message({ type: "error", message });
+			}
+		},
+		async handleSubmitUserDialog() {
+			await this.$validator.validateAll();
+
+			if (this.$validator.errors.items.length > 0) {
+				return;
+			}
+
 			this.$confirm("是否要確認?", "提示", {
 				confirmButtonText: "確認",
 				cancelButtonText: "取消",
 				type: "warning"
-			})
-				.then(() => {
-					if (this.isUpdateMode === false) {
-						// TODO: 新增使用者
-						this.$message({
-							message: "新增成功！",
-							type: "success"
-						});
-						this.isUserDialogVisible = false;
-						this.fetchUserList();
-					} else {
-						// TODO: 更新使用者
-						this.$message({
-							message: "編輯成功！",
-							type: "success"
-						});
-						this.isUserDialogVisible = false;
-						this.fetchUserList();
-					}
+			}).then(async () => {
+				if (this.isUpdateMode === false) {
+					await this.addUser(this.userForm);
+				} else {
+					await this.updateUser(this.userForm);
+				}
+			});
+		},
+		changeUserPassword() {
+			if (this.isUserFormPasswordEnabled === false) {
+				this.$refs.passwordInput.blur();
+				this.$confirm("是否要修改密碼?", "提示", {
+					confirmButtonText: "確認",
+					cancelButtonText: "取消",
+					type: "warning"
+				}).then(() => {
+					this.userForm.password = "";
 				});
+			}
 		},
 		handleAllocateRole(row) {
 			this.isAllocateRoleDialogVisible = true;
@@ -474,7 +535,10 @@ export default {
 	computed: {
 		isUpdateMode() {
 			return this.userForm.id !== 0;
-		}
+		},
+		isUserFormPasswordEnabled() {
+			return this.userForm.password !== undefined;
+		},
 	},
 	created() {
 		this.fetchUserList();
@@ -524,8 +588,8 @@ export default {
 	width: 540px;
 }
 
-.user-dialog input,
-.user-dialog textarea {
+.user-dialog .el-input,
+.user-dialog .el-textarea {
 	width: 250px;
 }
 
@@ -535,5 +599,9 @@ export default {
 
 .allocate-role-dialog .el-select {
 	width: 80%;
+}
+
+.error input {
+	border: 1px solid red;
 }
 </style>
