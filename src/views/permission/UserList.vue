@@ -203,6 +203,23 @@
 						show-password
 					></el-input>
 				</el-form-item>
+				<el-form-item label="角色：">
+					<el-select
+						v-model="userForm.role.id"
+						v-validate="{ required: true }"
+						name="roleId"
+						:class="{ error: errors.has('roleId') }"
+						placeholder=""
+					>
+						<el-option
+							v-for="role in selectableRoles"
+							:key="role.id"
+							:label="role.name"
+							:value="role.id"
+						>
+						</el-option>
+					</el-select>
+				</el-form-item>
 				<el-form-item label="備註：">
 					<el-input
 						type="textarea"
@@ -237,6 +254,7 @@
 
 <script>
 import { getUserListApi, addUserApi, updateUserApi, setUserEnabledApi, deleteUserApi } from "../../api/user";
+import getRolesSummariesApi from "../../api/role";
 import getPaginationFromHeaders from "../../utils/headers";
 
 const defaultPagination = {
@@ -246,8 +264,14 @@ const defaultPagination = {
 	total: 0,
 };
 
+const defaultRole = {
+	id: undefined,
+	name: ""
+};
+
 const defaultUserForm = {
 	id: 0,
+	role: { ...defaultRole },
 	username: "",
 	name: "",
 	email: "",
@@ -267,6 +291,7 @@ export default {
 			pagination: defaultPagination,
 			isUserDialogVisible: false,
 			userForm: { ...defaultUserForm },
+			selectableRoles: []
 		};
 	},
 	methods: {
@@ -295,6 +320,17 @@ export default {
 				this.isUserListLoading = false;
 			}
 		},
+		async fetchSelectableRoles() {
+			try {
+				const { data } = await getRolesSummariesApi();
+
+				this.selectableRoles = data;
+			} catch (error) {
+				console.error(error);
+				const message = error.response.data.error_message || "未知錯誤";
+				this.$message({ type: "error", message });
+			}
+		},
 		handleResetFilter() {
 			this.listQuery.keyword = "";
 		},
@@ -314,6 +350,7 @@ export default {
 		handleAdd() {
 			this.isUserDialogVisible = true;
 			this.userForm = { ...defaultUserForm };
+			this.userForm.role = { ...defaultUserForm.role };
 			this.$validator.reset();
 		},
 		handleUpdate(row) {
@@ -446,6 +483,7 @@ export default {
 	},
 	created() {
 		this.fetchUserList();
+		this.fetchSelectableRoles();
 	}
 };
 </script>

@@ -8,11 +8,12 @@ export const getUserListApi = params => {
   });
 };
 
-export const addUserApi = ({ username, name, email, password, remark }) => {
+export const addUserApi = ({ role, username, name, email, password, remark }) => {
   return request({
     method: "post",
     url: "/users",
     data: {
+      roleId: role.id,
       username,
       name,
       email,
@@ -22,11 +23,12 @@ export const addUserApi = ({ username, name, email, password, remark }) => {
   });
 };
 
-export const updateUserApi = ({ id, username, name, email, password, isEnabled, remark }) => {
+export const updateUserApi = ({ id, role, username, name, email, password, isEnabled, remark }) => {
   return request({
     method: "patch",
     url: `/users/${id}`,
     data: {
+      roleId: role.id,
       username,
       name,
       email,
