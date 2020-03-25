@@ -13,7 +13,7 @@
 					<div class="filter-operation">
 						<el-button
 							size="mini"
-							@click="handleResetFilter"
+							@click="initListQuery"
 						>
 							重置
 						</el-button>
@@ -27,14 +27,11 @@
 					</div>
 				</div>
 				<div class="filter-body">
-					<el-form
-						:inline="true"
-						:model="listQuery"
-					>
+					<el-form :inline="true">
 						<el-form-item label="輸入搜尋：">
 							<el-input
 								size="small"
-								v-model="listQuery.keyword"
+								v-model="keyword"
 								placeholder="帳號/姓名"
 							></el-input>
 						</el-form-item>
@@ -60,10 +57,10 @@
 			</div>
 		</el-card>
 		<el-table
-			:data="users"
+			:data="user.users"
 			border
 			style="width: 100%"
-			v-loading="isUserListLoading"
+			v-loading="user.isListLoading"
 		>
 			<el-table-column
 				prop="id"
@@ -112,8 +109,8 @@
 			>
 				<template slot-scope="scope">
 					<el-switch
-						v-model="scope.row.isEnabled"
-						@change="handleIsEnbaleChange(scope.row)"
+						:value="scope.row.isEnabled"
+						@change="toggleEnabled(scope.row)"
 					>
 					</el-switch>
 				</template>
@@ -134,7 +131,7 @@
 					<el-button
 						size="mini"
 						type="text"
-						@click="handleDelete(scope.row)"
+						@click="deleteUser(scope.row)"
 					>
 						刪除
 					</el-button>
@@ -144,30 +141,30 @@
 		<div class="pagination">
 			<el-pagination
 				background
-				:current-page="pagination.currentPage"
-				:page-sizes="pagination.pageSizes"
-				:page-size="pagination.pageSize"
+				:current-page="user.pagination.currentPage"
+				:page-sizes="user.pagination.pageSizes"
+				:page-size="user.pagination.pageSize"
 				layout="total, sizes, prev, pager, next, jumper"
-				:total="pagination.total"
+				:total="user.pagination.total"
 				@size-change="handlePageSizeChange"
 				@current-change="handleCurrentPageChange"
 			>
 			</el-pagination>
 		</div>
 		<el-dialog
-			:title="isUpdateMode? '編輯用戶' : '新增用戶'"
-			:visible.sync="isUserDialogVisible"
+			:title="isDialogFormUpdateMode? '編輯用戶' : '新增用戶'"
+			:visible="user.isDialogVisible"
+			@close="setDialogVisible(false)"
 			class="user-dialog"
 		>
 			<el-form
 				ref="form"
-				:model="userForm"
 				size="small"
 				label-width="150px"
 			>
 				<el-form-item label="帳號：">
 					<el-input
-						v-model="userForm.username"
+						v-model="username"
 						v-validate="{ required: true }"
 						name="username"
 						:class="{ error: errors.has('username') }"
@@ -175,7 +172,7 @@
 				</el-form-item>
 				<el-form-item label="姓名：">
 					<el-input
-						v-model="userForm.name"
+						v-model="name"
 						v-validate="{ required: true }"
 						name="name"
 						:class="{ error: errors.has('name') }"
@@ -183,7 +180,7 @@
 				</el-form-item>
 				<el-form-item label="信箱：">
 					<el-input
-						v-model="userForm.email"
+						v-model="email"
 						v-validate="{ required: true, email: true }"
 						name="email"
 						:class="{ error: errors.has('email') }"
@@ -192,12 +189,12 @@
 				<el-form-item label="密碼：">
 					<el-input
 						type="password"
-						v-model="userForm.password"
-						v-validate="{ required: isUserFormPasswordEnabled }"
+						v-model="password"
+						v-validate="{ required: isDialogFormPasswordEnabled }"
 						name="password"
 						:class="{ error: errors.has('password') }"
-						:placeholder="isUserFormPasswordEnabled === false? '點擊解鎖' : null"
-						:readonly="isUserFormPasswordEnabled === false"
+						:placeholder="isDialogFormPasswordEnabled === false? '點擊解鎖' : null"
+						:readonly="isDialogFormPasswordEnabled === false"
 						@focus="changeUserPassword()"
 						ref="passwordInput"
 						show-password
@@ -205,7 +202,7 @@
 				</el-form-item>
 				<el-form-item label="角色：">
 					<el-select
-						v-model="userForm.role.id"
+						v-model="roleId"
 						v-validate="{ required: true }"
 						name="roleId"
 						:class="{ error: errors.has('roleId') }"
@@ -223,12 +220,12 @@
 				<el-form-item label="備註：">
 					<el-input
 						type="textarea"
-						v-model="userForm.remark"
+						v-model="remark"
 						:rows="5"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="是否啟用：">
-					<el-radio-group v-model="userForm.isEnabled">
+					<el-radio-group v-model="isEnabled">
 						<el-radio :label="true">是</el-radio>
 						<el-radio :label="false">否</el-radio>
 					</el-radio-group>
@@ -240,12 +237,12 @@
 			>
 				<el-button
 					size="small"
-					@click="isUserDialogVisible = false"
+					@click="setDialogVisible(false)"
 				>取 消</el-button>
 				<el-button
 					size="small"
 					type="primary"
-					@click="handleSubmitUserDialog"
+					@click="handleSubmitDialog($validator)"
 				>確 定</el-button>
 			</div>
 		</el-dialog>
@@ -253,73 +250,16 @@
 </template>
 
 <script>
-import { getUserListApi, addUserApi, updateUserApi, setUserEnabledApi, deleteUserApi } from "../../api/user";
+import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
+import { mapFields } from "vuex-map-fields";
+
 import getRolesSummariesApi from "../../api/role";
-import getPaginationFromHeaders from "../../utils/headers";
-
-const defaultPagination = {
-	pageSizes: [2, 5, 10],
-	pageSize: 10,
-	currentPage: 1,
-	total: 0,
-};
-
-const defaultRole = {
-	id: undefined,
-	name: ""
-};
-
-const defaultUserForm = {
-	id: 0,
-	role: { ...defaultRole },
-	username: "",
-	name: "",
-	email: "",
-	password: "",
-	remark: "",
-	isEnabled: true
-};
 
 export default {
 	data() {
-		return {
-			isUserListLoading: false,
-			listQuery: {
-				keyword: ""
-			},
-			users: [],
-			pagination: defaultPagination,
-			isUserDialogVisible: false,
-			userForm: { ...defaultUserForm },
-			selectableRoles: []
-		};
+		return { selectableRoles: [] };
 	},
 	methods: {
-		async fetchUserList() {
-			try {
-				this.isUserListLoading = true;
-
-				const params = {
-					page: this.pagination.currentPage,
-					pageSize: this.pagination.pageSize,
-					keyword: this.listQuery.keyword.trim() ? this.listQuery.keyword.trim() : undefined
-				};
-
-				const { data, headers } = await getUserListApi(params);
-
-				this.users = data;
-				this.pagination = {
-					...this.pagination,
-					...getPaginationFromHeaders(headers)
-				};
-			} catch (error) {
-				console.error(error);
-				const message = error.response.data.error_message || "未知錯誤";
-				this.$message({ type: "error", message });
-			} finally {
-				this.isUserListLoading = false;
-			}
-		},
 		async fetchSelectableRoles() {
 			try {
 				const { data } = await getRolesSummariesApi();
@@ -331,158 +271,68 @@ export default {
 				this.$message({ type: "error", message });
 			}
 		},
-		handleResetFilter() {
-			this.listQuery.keyword = "";
-		},
+		...mapActions("user", [
+			"initListQuery",
+			"toggleEnabled",
+			"deleteUser",
+			"handleSubmitDialog",
+		]),
+		...mapMutations("user", ["setDialogVisible"]),
 		handleSearchList() {
-			this.pagination.currentPage = 1;
-			this.fetchUserList();
+			this.$store.commit("user/setPaginationCurrentPage", 1);
+			this.$store.dispatch("user/fetchList");
 		},
 		handlePageSizeChange(pageSize) {
-			this.pagination.pageSize = pageSize;
-			this.pagination.currentPage = 1;
-			this.fetchUserList();
+			this.$store.commit("user/setPaginationPageSize", pageSize);
+			this.$store.commit("user/setPaginationCurrentPage", 1);
+			this.$store.dispatch("user/fetchList");
 		},
 		handleCurrentPageChange(page) {
-			this.pagination.currentPage = page;
-			this.fetchUserList();
+			this.$store.commit("user/setPaginationCurrentPage", page);
+			this.$store.dispatch("user/fetchList");
 		},
 		handleAdd() {
-			this.isUserDialogVisible = true;
-			this.userForm = { ...defaultUserForm };
-			this.userForm.role = { ...defaultUserForm.role };
+			this.$store.commit("user/setDialogVisible", true);
+			this.$store.commit("user/initDialogForm");
 			this.$validator.reset();
 		},
 		handleUpdate(row) {
-			this.isUserDialogVisible = true;
-			this.userForm = { ...row };
+			this.$store.commit("user/setDialogVisible", true);
+			this.$store.commit("user/setDialogForm", { ...row });
 			this.$validator.reset();
-			this.$set(this.userForm, "password", undefined);
-		},
-		async deleteUser(id) {
-			try {
-				await deleteUserApi(id);
-
-				this.$message({
-					message: "刪除成功!",
-					type: "success"
-				});
-				this.fetchUserList();
-			} catch (error) {
-				console.error(error);
-				const message = error.response.data.error_message || "未知錯誤";
-				this.$message({ type: "error", message });
-			}
-		},
-		handleDelete(row) {
-			this.$confirm("是否刪除該用戶？", "提示", {
-				confirmButtonText: "確定",
-				cancelButtonText: "取消",
-				type: "warning"
-			}).then(async () => {
-				await this.deleteUser(row.id);
-			});
-		},
-		async addUser(user) {
-			try {
-				await addUserApi(user);
-
-				this.$message({
-					message: "新增成功!",
-					type: "success"
-				});
-
-				this.isUserDialogVisible = false;
-				this.fetchUserList();
-			} catch (error) {
-				console.error(error);
-				const message = error.response.data.error_message || "未知錯誤";
-				this.$message({ type: "error", message });
-			}
-		},
-		async updateUser(user) {
-			try {
-				await updateUserApi(user);
-
-				this.$message({
-					message: "編輯成功!",
-					type: "success"
-				});
-
-				this.isUserDialogVisible = false;
-				this.fetchUserList();
-			} catch (error) {
-				console.error(error);
-				const message = error.response.data.error_message || "未知錯誤";
-				this.$message({ type: "error", message });
-			}
-		},
-		async handleSubmitUserDialog() {
-			await this.$validator.validateAll();
-
-			if (this.$validator.errors.items.length > 0) {
-				return;
-			}
-
-			this.$confirm("是否要確認?", "提示", {
-				confirmButtonText: "確認",
-				cancelButtonText: "取消",
-				type: "warning"
-			}).then(async () => {
-				if (this.isUpdateMode === false) {
-					await this.addUser(this.userForm);
-				} else {
-					await this.updateUser(this.userForm);
-				}
-			});
 		},
 		changeUserPassword() {
-			if (this.isUserFormPasswordEnabled === false) {
+			if (this.isDialogFormPasswordEnabled === false) {
 				this.$refs.passwordInput.blur();
 				this.$confirm("是否要修改密碼?", "提示", {
 					confirmButtonText: "確認",
 					cancelButtonText: "取消",
 					type: "warning"
 				}).then(() => {
-					this.userForm.password = "";
+					this.password = "";
 				});
 			}
-		},
-		async setUserEnabled(id, isEnabled) {
-			try {
-				await setUserEnabledApi(id, isEnabled);
-
-				this.$message({
-					message: `${isEnabled === true ? "啟用" : "停用"}用戶成功！`,
-					type: "success"
-				});
-			} catch (error) {
-				console.error(error);
-				const message = error.response.data.error_message || "未知錯誤";
-				this.$message({ type: "error", message });
-				this.fetchUserList();
-			}
-		},
-		handleIsEnbaleChange(user) {
-			this.$confirm(`是否要${user.isEnabled === true ? "啟用" : "停用"}此用戶?`, "提示", {
-				confirmButtonText: "確認",
-				cancelButtonText: "取消",
-				type: "warning"
-			}).then(async () => {
-				await this.setUserEnabled(user.id, user.isEnabled);
-			});
 		}
 	},
 	computed: {
-		isUpdateMode() {
-			return this.userForm.id !== 0;
-		},
-		isUserFormPasswordEnabled() {
-			return this.userForm.password !== undefined;
-		},
+		...mapState(["user"]),
+		...mapGetters("user", ["isDialogFormUpdateMode", "isDialogFormPasswordEnabled"]),
+		...mapFields("user", [
+			"listQuery.keyword",
+			"dialogForm.id",
+			"dialogForm.username",
+			"dialogForm.name",
+			"dialogForm.email",
+			"dialogForm.password",
+			"dialogForm.remark",
+			"dialogForm.isEnabled"
+		]),
+		...mapFields("user", {
+			roleId: "dialogForm.role.id",
+		}),
 	},
 	created() {
-		this.fetchUserList();
+		this.$store.dispatch("user/fetchList");
 		this.fetchSelectableRoles();
 	}
 };

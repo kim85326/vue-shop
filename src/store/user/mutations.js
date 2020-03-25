@@ -1,4 +1,5 @@
 import Vue from "vue";
+import { updateField } from "vuex-map-fields";
 
 import getPaginationFromHeaders from "../../utils/headers";
 
@@ -43,6 +44,8 @@ export const state = {
 };
 
 export const mutations = {
+  updateField,
+
   // List
   setListLoading(state, isLoading) {
     state.isListLoading = isLoading;
