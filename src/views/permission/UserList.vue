@@ -253,24 +253,8 @@
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import { mapFields } from "vuex-map-fields";
 
-import getRolesSummariesApi from "../../api/role";
-
 export default {
-	data() {
-		return { selectableRoles: [] };
-	},
 	methods: {
-		async fetchSelectableRoles() {
-			try {
-				const { data } = await getRolesSummariesApi();
-
-				this.selectableRoles = data;
-			} catch (error) {
-				console.error(error);
-				const message = error.response.data.error_message || "未知錯誤";
-				this.$message({ type: "error", message });
-			}
-		},
 		...mapActions("user", [
 			"initListQuery",
 			"toggleEnabled",
@@ -317,6 +301,9 @@ export default {
 	computed: {
 		...mapState(["user"]),
 		...mapGetters("user", ["isDialogFormUpdateMode", "isDialogFormPasswordEnabled"]),
+		...mapState("role", {
+			selectableRoles: (state) => state.rolesSummaries
+		}),
 		...mapFields("user", [
 			"listQuery.keyword",
 			"dialogForm.id",
@@ -333,7 +320,7 @@ export default {
 	},
 	created() {
 		this.$store.dispatch("user/fetchList");
-		this.fetchSelectableRoles();
+		this.$store.dispatch("role/fetchSummaries");
 	}
 };
 </script>
