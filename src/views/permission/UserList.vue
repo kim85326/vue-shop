@@ -1,44 +1,6 @@
 <template>
 	<div>
-		<el-card
-			shadow="never"
-			class="search-bar-container"
-		>
-			<div class="search-bar">
-				<div class="search-bar-header">
-					<div class="search-bar-title">
-						<i class="el-icon-search"></i>
-						<span>篩選搜尋</span>
-					</div>
-					<div class="search-bar-operation">
-						<el-button
-							size="mini"
-							@click="initListQuery"
-						>
-							重置
-						</el-button>
-						<el-button
-							size="mini"
-							type="primary"
-							@click="handleSearchList"
-						>
-							查詢
-						</el-button>
-					</div>
-				</div>
-				<div class="search-bar-body">
-					<el-form :inline="true">
-						<el-form-item label="輸入搜尋：">
-							<el-input
-								size="small"
-								v-model="keyword"
-								placeholder="帳號/姓名"
-							></el-input>
-						</el-form-item>
-					</el-form>
-				</div>
-			</div>
-		</el-card>
+		<SearchBar />
 		<el-card
 			shadow="never"
 			class="operation-container"
@@ -240,9 +202,10 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 import { mapFields } from "vuex-map-fields";
 
+import SearchBar from "@/components/permission/userList/SearchBar.vue";
 import Pagination from "@/components/permission/userList/Pagination.vue";
 
 export default {
@@ -250,7 +213,8 @@ export default {
 		validator: "new"
 	},
 	components: {
-		Pagination
+		SearchBar,
+		Pagination,
 	},
 	methods: {
 		...mapActions("user", [
@@ -258,13 +222,6 @@ export default {
 			"deleteUser",
 			"handleSubmitDialog",
 		]),
-		...mapMutations("user", [
-			"initListQuery",
-		]),
-		handleSearchList() {
-			this.$store.commit("user/setPaginationCurrentPage", 1);
-			this.$store.dispatch("user/fetchList");
-		},
 		handleCloseDialog() {
 			this.$store.commit("user/setDialogVisible", false);
 			this.$store.commit("user/initDialogForm");
@@ -297,7 +254,6 @@ export default {
 			selectableRoles: (state) => state.rolesSummaries
 		}),
 		...mapFields("user", [
-			"listQuery.keyword",
 			"dialogForm.id",
 			"dialogForm.username",
 			"dialogForm.name",
