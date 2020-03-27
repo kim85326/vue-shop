@@ -15,7 +15,7 @@ import SearchBar from "@/components/permission/userList/searchBar/Wrap.vue";
 import Operation from "@/components/permission/userList/Operation.vue";
 import Table from "@/components/permission/userList/Table.vue";
 import Pagination from "@/components/permission/userList/Pagination.vue";
-import Dialog from "@/components/permission/userList/Dialog.vue";
+import Dialog from "@/components/permission/userList/dialog/Wrap.vue";
 
 export default {
 	components: {
