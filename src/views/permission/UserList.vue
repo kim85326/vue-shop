@@ -254,6 +254,9 @@ import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import { mapFields } from "vuex-map-fields";
 
 export default {
+	$_veeValidate: {
+		validator: "new"
+	},
 	methods: {
 		...mapActions("user", [
 			"toggleEnabled",
