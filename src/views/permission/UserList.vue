@@ -139,17 +139,7 @@
 			</el-table-column>
 		</el-table>
 		<div class="pagination">
-			<el-pagination
-				background
-				:current-page="user.pagination.currentPage"
-				:page-sizes="user.pagination.pageSizes"
-				:page-size="user.pagination.pageSize"
-				layout="total, sizes, prev, pager, next, jumper"
-				:total="user.pagination.total"
-				@size-change="handlePageSizeChange"
-				@current-change="handleCurrentPageChange"
-			>
-			</el-pagination>
+			<Pagination />
 		</div>
 		<el-dialog
 			:title="isDialogFormUpdateMode? '編輯用戶' : '新增用戶'"
@@ -253,9 +243,14 @@
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import { mapFields } from "vuex-map-fields";
 
+import Pagination from "@/components/permission/userList/Pagination.vue";
+
 export default {
 	$_veeValidate: {
 		validator: "new"
+	},
+	components: {
+		Pagination
 	},
 	methods: {
 		...mapActions("user", [
@@ -268,15 +263,6 @@ export default {
 		]),
 		handleSearchList() {
 			this.$store.commit("user/setPaginationCurrentPage", 1);
-			this.$store.dispatch("user/fetchList");
-		},
-		handlePageSizeChange(pageSize) {
-			this.$store.commit("user/setPaginationPageSize", pageSize);
-			this.$store.commit("user/setPaginationCurrentPage", 1);
-			this.$store.dispatch("user/fetchList");
-		},
-		handleCurrentPageChange(page) {
-			this.$store.commit("user/setPaginationCurrentPage", page);
 			this.$store.dispatch("user/fetchList");
 		},
 		handleCloseDialog() {
