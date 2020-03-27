@@ -1,23 +1,7 @@
 <template>
 	<div>
 		<SearchBar />
-		<el-card
-			shadow="never"
-			class="operation-container"
-		>
-			<div class="operation">
-				<div class="operation-title">
-					<i class="el-icon-tickets"></i>
-					<span>資料列表</span>
-				</div>
-				<el-button
-					size="mini"
-					@click="handleAdd"
-				>
-					新增
-				</el-button>
-			</div>
-		</el-card>
+		<Operation />
 		<el-table
 			:data="user.users"
 			border
@@ -206,6 +190,7 @@ import { mapState, mapGetters, mapActions } from "vuex";
 import { mapFields } from "vuex-map-fields";
 
 import SearchBar from "@/components/permission/userList/SearchBar.vue";
+import Operation from "@/components/permission/userList/Operation.vue";
 import Pagination from "@/components/permission/userList/Pagination.vue";
 
 export default {
@@ -214,6 +199,7 @@ export default {
 	},
 	components: {
 		SearchBar,
+		Operation,
 		Pagination,
 	},
 	methods: {
@@ -226,9 +212,6 @@ export default {
 			this.$store.commit("user/setDialogVisible", false);
 			this.$store.commit("user/initDialogForm");
 			this.$validator.reset();
-		},
-		handleAdd() {
-			this.$store.commit("user/setDialogVisible", true);
 		},
 		handleUpdate(row) {
 			this.$store.commit("user/setDialogVisible", true);
