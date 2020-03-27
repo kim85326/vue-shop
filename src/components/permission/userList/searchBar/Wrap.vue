@@ -27,13 +27,7 @@
 			</div>
 			<div class="search-bar-body">
 				<el-form :inline="true">
-					<el-form-item label="輸入搜尋：">
-						<el-input
-							size="small"
-							v-model="keyword"
-							placeholder="帳號/姓名"
-						></el-input>
-					</el-form-item>
+					<Keyword />
 				</el-form>
 			</div>
 		</div>
@@ -41,12 +35,13 @@
 </template>
 
 <script>
-import { mapFields } from "vuex-map-fields";
 import { mapMutations } from "vuex";
 
+import Keyword from "./Keyword.vue";
+
 export default {
-	computed: {
-		...mapFields("user", ["listQuery.keyword"])
+	components: {
+		Keyword
 	},
 	methods: {
 		...mapMutations("user", ["initListQuery"]),
