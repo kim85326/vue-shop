@@ -256,12 +256,14 @@ import { mapFields } from "vuex-map-fields";
 export default {
 	methods: {
 		...mapActions("user", [
-			"initListQuery",
 			"toggleEnabled",
 			"deleteUser",
 			"handleSubmitDialog",
 		]),
-		...mapMutations("user", ["setDialogVisible"]),
+		...mapMutations("user", [
+			"setDialogVisible",
+			"initListQuery",
+		]),
 		handleSearchList() {
 			this.$store.commit("user/setPaginationCurrentPage", 1);
 			this.$store.dispatch("user/fetchList");
