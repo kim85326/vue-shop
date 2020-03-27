@@ -2,15 +2,15 @@
 	<div>
 		<el-card
 			shadow="never"
-			class="filter-container"
+			class="search-bar-container"
 		>
-			<div class="filter">
-				<div class="filter-header">
-					<div class="filter-title">
+			<div class="search-bar">
+				<div class="search-bar-header">
+					<div class="search-bar-title">
 						<i class="el-icon-search"></i>
 						<span>篩選搜尋</span>
 					</div>
-					<div class="filter-operation">
+					<div class="search-bar-operation">
 						<el-button
 							size="mini"
 							@click="initListQuery"
@@ -26,7 +26,7 @@
 						</el-button>
 					</div>
 				</div>
-				<div class="filter-body">
+				<div class="search-bar-body">
 					<el-form :inline="true">
 						<el-form-item label="輸入搜尋：">
 							<el-input
@@ -326,34 +326,34 @@ export default {
 </script>
 
 <style>
-.filter-container,
+.search-bar-container,
 .operation-container {
 	margin-bottom: 20px;
 }
 
-.filter-header,
+.search-bar-header,
 .operation {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
 
-.filter-title,
+.search-bar-title,
 .operation-title {
 	display: flex;
 }
 
-.filter-title i,
+.search-bar-title i,
 .operation-title i {
 	margin-right: 6px;
 }
 
-.filter-body {
+.search-bar-body {
 	margin-top: 8px;
 	padding-left: 32px;
 }
 
-.filter .el-form--inline .el-form-item {
+.search-bar .el-form--inline .el-form-item {
 	margin-bottom: 0;
 }
 
