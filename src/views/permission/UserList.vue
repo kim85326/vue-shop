@@ -154,7 +154,7 @@
 		<el-dialog
 			:title="isDialogFormUpdateMode? '編輯用戶' : '新增用戶'"
 			:visible="user.isDialogVisible"
-			@close="setDialogVisible(false)"
+			@close="handleCloseDialog()"
 			class="user-dialog"
 		>
 			<el-form
@@ -237,7 +237,7 @@
 			>
 				<el-button
 					size="small"
-					@click="setDialogVisible(false)"
+					@click="handleCloseDialog()"
 				>取 消</el-button>
 				<el-button
 					size="small"
@@ -264,7 +264,6 @@ export default {
 			"handleSubmitDialog",
 		]),
 		...mapMutations("user", [
-			"setDialogVisible",
 			"initListQuery",
 		]),
 		handleSearchList() {
@@ -280,15 +279,17 @@ export default {
 			this.$store.commit("user/setPaginationCurrentPage", page);
 			this.$store.dispatch("user/fetchList");
 		},
-		handleAdd() {
-			this.$store.commit("user/setDialogVisible", true);
+		handleCloseDialog() {
+			this.$store.commit("user/setDialogVisible", false);
 			this.$store.commit("user/initDialogForm");
 			this.$validator.reset();
+		},
+		handleAdd() {
+			this.$store.commit("user/setDialogVisible", true);
 		},
 		handleUpdate(row) {
 			this.$store.commit("user/setDialogVisible", true);
 			this.$store.commit("user/setDialogForm", { ...row });
-			this.$validator.reset();
 		},
 		changeUserPassword() {
 			if (this.isDialogFormPasswordEnabled === false) {
