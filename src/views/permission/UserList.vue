@@ -2,88 +2,7 @@
 	<div>
 		<SearchBar />
 		<Operation />
-		<el-table
-			:data="user.users"
-			border
-			style="width: 100%"
-			v-loading="user.isListLoading"
-		>
-			<el-table-column
-				prop="id"
-				label="編號"
-				width="70"
-				align="center"
-			>
-			</el-table-column>
-			<el-table-column
-				prop="username"
-				label="帳號"
-				align="center"
-			>
-			</el-table-column>
-			<el-table-column
-				prop="name"
-				label="姓名"
-				width="130"
-				align="center"
-			>
-			</el-table-column>
-			<el-table-column
-				prop="email"
-				label="信箱"
-				align="center"
-			>
-			</el-table-column>
-			<el-table-column
-				prop="createdTime"
-				label="建立時間"
-				width="180"
-				align="center"
-			>
-			</el-table-column>
-			<el-table-column
-				prop="latestLoginTime"
-				label="最後登入"
-				width="180"
-				align="center"
-			>
-			</el-table-column>
-			<el-table-column
-				label="是否啟用"
-				width="120"
-				align="center"
-			>
-				<template slot-scope="scope">
-					<el-switch
-						:value="scope.row.isEnabled"
-						@change="toggleEnabled(scope.row)"
-					>
-					</el-switch>
-				</template>
-			</el-table-column>
-			<el-table-column
-				label="操作"
-				width="120"
-				align="center"
-			>
-				<template slot-scope="scope">
-					<el-button
-						size="mini"
-						type="text"
-						@click="handleUpdate(scope.row)"
-					>
-						編輯
-					</el-button>
-					<el-button
-						size="mini"
-						type="text"
-						@click="deleteUser(scope.row)"
-					>
-						刪除
-					</el-button>
-				</template>
-			</el-table-column>
-		</el-table>
+		<Table />
 		<div class="pagination">
 			<Pagination />
 		</div>
@@ -191,6 +110,7 @@ import { mapFields } from "vuex-map-fields";
 
 import SearchBar from "@/components/permission/userList/SearchBar.vue";
 import Operation from "@/components/permission/userList/Operation.vue";
+import Table from "@/components/permission/userList/Table.vue";
 import Pagination from "@/components/permission/userList/Pagination.vue";
 
 export default {
@@ -200,22 +120,17 @@ export default {
 	components: {
 		SearchBar,
 		Operation,
+		Table,
 		Pagination,
 	},
 	methods: {
 		...mapActions("user", [
-			"toggleEnabled",
-			"deleteUser",
 			"handleSubmitDialog",
 		]),
 		handleCloseDialog() {
 			this.$store.commit("user/setDialogVisible", false);
 			this.$store.commit("user/initDialogForm");
 			this.$validator.reset();
-		},
-		handleUpdate(row) {
-			this.$store.commit("user/setDialogVisible", true);
-			this.$store.commit("user/setDialogForm", { ...row });
 		},
 		changeUserPassword() {
 			if (this.isDialogFormPasswordEnabled === false) {
@@ -250,7 +165,6 @@ export default {
 		}),
 	},
 	created() {
-		this.$store.dispatch("user/fetchList");
 		this.$store.dispatch("role/fetchSummaries");
 	}
 };
