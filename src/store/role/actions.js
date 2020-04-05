@@ -7,5 +7,17 @@ export default {
     if (status === 200) {
       commit("setRolesSummaries", data);
     }
-  }
+  },
+
+  async fetchRoles({ commit }) {
+    commit("setListLoading", true);
+
+    const { status, data } = await request("get", "/roles");
+
+    if (status === 200) {
+      commit("setRoles", data);
+    }
+
+    commit("setListLoading", false);
+  },
 };
