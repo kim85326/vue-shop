@@ -1,30 +1,21 @@
 import { Message, MessageBox } from "element-ui";
-
-import {
-  getUserListApi,
-  deleteUserApi,
-  setUserEnabledApi,
-  addUserApi,
-  updateUserApi
-} from "../../api/user";
+import request from "@/utils/request";
 
 export default {
   // List
   async fetchList({ commit, getters }) {
-    try {
-      commit("setListLoading", true);
+    commit("setListLoading", true);
 
-      const { data, headers } = await getUserListApi({ ...getters.getListParam });
+    const { status, data, headers } = await request("get", "/users", {
+      params: getters.getListParam
+    });
 
+    if (status === 200) {
       commit("setUsers", data);
       commit("updatePaginationFromHeaders", headers);
-    } catch (error) {
-      console.error(error);
-      const message = error.response.data.error_message || "未知錯誤";
-      Message.error({ message });
-    } finally {
-      commit("setListLoading", false);
     }
+
+    commit("setListLoading", false);
   },
   async deleteUser({ dispatch }, row) {
     await MessageBox.confirm("是否刪除該用戶？", "提示", {
@@ -33,15 +24,11 @@ export default {
       type: "warning"
     });
 
-    try {
-      await deleteUserApi(row.id);
+    const { status } = await request("delete", `/users/${row.id}`);
 
+    if (status === 204) {
       Message.success({ message: "刪除成功" });
       dispatch("fetchList");
-    } catch (error) {
-      console.error(error);
-      const message = error.response.data.error_message || "未知錯誤";
-      Message.error({ message });
     }
   },
   async toggleEnabled({ dispatch }, row) {
@@ -54,15 +41,11 @@ export default {
       type: "warning"
     });
 
-    try {
-      await setUserEnabledApi(id, isEnabled);
+    const { status } = await request(isEnabled === true ? "put" : "delete", `/users/${id}/enabled`);
 
+    if (status === 204) {
       Message.success({ message: `${isEnabled === true ? "啟用" : "停用"}用戶成功！` });
       dispatch("fetchList");
-    } catch (error) {
-      console.error(error);
-      const message = error.response.data.error_message || "未知錯誤";
-      Message.error({ message });
     }
   },
 
@@ -80,21 +63,22 @@ export default {
       type: "warning"
     });
 
-    try {
-      if (getters.isDialogFormUpdateMode === false) {
-        await addUserApi(state.dialogForm);
-      } else {
-        await updateUserApi(state.dialogForm);
-      }
+    let httpMethod = "post";
+    let url = "/users";
+    let operation = "新增";
 
-      const operation = getters.isDialogFormUpdateMode === false ? "新增" : "編輯";
+    if (getters.isDialogFormUpdateMode === true) {
+      httpMethod = "patch";
+      url = `/users/${state.dialogForm.id}`;
+      operation = "編輯";
+    }
+
+    const { status } = await request(httpMethod, url, { data: getters.getDialogRequestBody });
+
+    if (status === 201 || status === 200) {
       Message.success({ message: `${operation}成功!` });
       commit("setDialogVisible", false);
       dispatch("fetchList");
-    } catch (error) {
-      console.error(error);
-      const message = error.response.data.error_message || "未知錯誤";
-      Message.error({ type: "error", message });
     }
   }
 };

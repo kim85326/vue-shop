@@ -18,5 +18,16 @@ export default {
   },
   isDialogFormPasswordEnabled(state) {
     return state.dialogForm.password !== undefined;
+  },
+  getDialogRequestBody(state) {
+    return {
+      roleId: state.dialogForm.role.id,
+      username: state.dialogForm.username,
+      name: state.dialogForm.name,
+      email: state.dialogForm.email,
+      password: state.dialogForm.password,
+      remark: state.dialogForm.remark,
+      isEnabled: state.dialogForm.isEnabled
+    };
   }
 };

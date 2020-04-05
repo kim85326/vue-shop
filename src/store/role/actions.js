@@ -1,17 +1,11 @@
-import { Message } from "element-ui";
-
-import getRolesSummariesApi from "../../api/role";
+import request from "@/utils/request";
 
 export default {
   async fetchSummaries({ commit }) {
-    try {
-      const { data } = await getRolesSummariesApi();
+    const { status, data } = await request("get", "/roles/summaries");
 
+    if (status === 200) {
       commit("setRolesSummaries", data);
-    } catch (error) {
-      console.error(error);
-      const message = error.response.data.error_message || "未知錯誤";
-      Message.error({ message });
     }
   }
 };
