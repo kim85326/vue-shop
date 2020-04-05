@@ -12,7 +12,7 @@
 				<div class="search-bar-operation">
 					<el-button
 						size="mini"
-						@click="initListQuery"
+						@click="handleReset"
 					>
 						重置
 					</el-button>
@@ -49,6 +49,10 @@ export default {
 			this.$store.commit("user/setPaginationCurrentPage", 1);
 			this.$store.dispatch("user/fetchList");
 		},
+		handleReset() {
+			this.initListQuery();
+			this.$store.dispatch("user/fetchList");
+		}
 	}
 };
 </script>
