@@ -35,20 +35,17 @@ export default {
 </script>
 
 <style>
-.search-bar-header,
-.operation {
+.search-bar-header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
 
-.search-bar-title,
-.operation-title {
+.search-bar-title {
 	display: flex;
 }
 
-.search-bar-title i,
-.operation-title i {
+.search-bar-title i {
 	margin-right: 6px;
 }
 

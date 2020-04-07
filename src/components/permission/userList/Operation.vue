@@ -1,7 +1,7 @@
 <template>
 	<el-card shadow="never">
 		<div class="operation">
-			<div class="operation-title">
+			<div class="operation__title">
 				<i class="el-icon-tickets"></i>
 				<span>資料列表</span>
 			</div>

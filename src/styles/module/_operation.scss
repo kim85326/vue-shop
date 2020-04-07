@@ -1,0 +1,13 @@
+.operation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &__title {
+    display: flex;
+
+    i {
+      margin-right: 6px;
+    }
+  }
+}
