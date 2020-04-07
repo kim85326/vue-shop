@@ -1,13 +1,16 @@
 <template>
 	<el-container class="home">
-		<el-aside width="180px">
+		<el-aside
+			width="180px"
+			class="home__aside"
+		>
 			<Aside />
 		</el-aside>
 		<el-container>
-			<el-header>
+			<el-header class="home__header">
 				<Header />
 			</el-header>
-			<el-main>
+			<el-main class="home__main">
 				<UserList></UserList>
 			</el-main>
 		</el-container>
@@ -27,22 +30,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.home {
-	height: 100%;
-}
-
-.el-header {
-	background-color: white;
-	border-bottom: 1px solid #e6e6e6;
-}
-
-.el-aside {
-	background-color: #304156;
-}
-
-.el-main {
-	background-color: white;
-}
-</style>

@@ -1,0 +1,16 @@
+.home {
+  height: 100%;
+
+  &__header {
+    background-color: white;
+    border-bottom: 1px solid #e6e6e6;
+  }
+
+  &__aside {
+    background-color: #304156;
+  }
+
+  &__main {
+    background-color: white;
+  }
+}
