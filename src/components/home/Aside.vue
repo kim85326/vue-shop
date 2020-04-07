@@ -122,22 +122,3 @@
 export default {
 };
 </script>
-
-<style>
-.aside .el-menu {
-	border: none;
-}
-
-.aside .el-menu-item [class^="el-icon-"],
-.aside .el-submenu [class^="el-icon-"] {
-	margin-right: 12px;
-}
-
-.el-submenu .el-menu-item {
-	background-color: #1f2d3d !important;
-}
-
-.el-submenu .el-menu-item:hover {
-	background-color: #001528 !important;
-}
-</style>

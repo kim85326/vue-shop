@@ -1,0 +1,18 @@
+.aside {
+  .el-menu {
+    border: none;
+  }
+
+  .el-menu-item [class^="el-icon-"],
+  .el-submenu [class^="el-icon-"] {
+    margin-right: 12px;
+  }
+
+  .el-submenu .el-menu-item {
+    background-color: #1f2d3d !important;
+  }
+
+  .el-submenu .el-menu-item:hover {
+    background-color: #001528 !important;
+  }
+}
