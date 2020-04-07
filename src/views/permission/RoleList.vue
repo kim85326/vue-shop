@@ -1,6 +1,8 @@
 <template>
-	<div>
-		<Table />
+	<div class="list">
+		<div class="list__block">
+			<Table />
+		</div>
 	</div>
 </template>
 
