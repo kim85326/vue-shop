@@ -1,0 +1,10 @@
+.list {
+  &__block {
+    margin-bottom: 20px;
+  }
+
+  &__pagination {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

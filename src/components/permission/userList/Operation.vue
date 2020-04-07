@@ -1,8 +1,5 @@
 <template>
-	<el-card
-		shadow="never"
-		class="operation-container"
-	>
+	<el-card shadow="never">
 		<div class="operation">
 			<div class="operation-title">
 				<i class="el-icon-tickets"></i>

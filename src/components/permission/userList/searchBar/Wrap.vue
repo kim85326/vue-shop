@@ -1,8 +1,5 @@
 <template>
-	<el-card
-		shadow="never"
-		class="search-bar-container"
-	>
+	<el-card shadow="never">
 		<div class="search-bar">
 			<div class="search-bar-header">
 				<div class="search-bar-title">

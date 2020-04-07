@@ -1,9 +1,15 @@
 <template>
-	<div>
-		<SearchBar />
-		<Operation />
-		<Table />
-		<div class="pagination">
+	<div class="list">
+		<div class="list__block">
+			<SearchBar />
+		</div>
+		<div class="list__block">
+			<Operation />
+		</div>
+		<div class="list__block">
+			<Table />
+		</div>
+		<div class="list__pagination">
 			<Pagination />
 		</div>
 		<Dialog />
@@ -29,11 +35,6 @@ export default {
 </script>
 
 <style>
-.search-bar-container,
-.operation-container {
-	margin-bottom: 20px;
-}
-
 .search-bar-header,
 .operation {
 	display: flex;
@@ -58,12 +59,6 @@ export default {
 
 .search-bar .el-form--inline .el-form-item {
 	margin-bottom: 0;
-}
-
-.pagination {
-	display: flex;
-	justify-content: flex-end;
-	margin-top: 20px;
 }
 
 .error input {
