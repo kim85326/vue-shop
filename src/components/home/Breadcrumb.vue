@@ -13,10 +13,3 @@
 export default {
 };
 </script>
-
-<style>
-.breadcrumb.el-breadcrumb {
-	display: inline-block;
-	line-height: 60px;
-}
-</style>
