@@ -1,0 +1,12 @@
+.dialog {
+  &__user {
+    .el-dialog {
+      width: 540px;
+    }
+
+    .el-input,
+    .el-textarea {
+      width: 250px;
+    }
+  }
+}

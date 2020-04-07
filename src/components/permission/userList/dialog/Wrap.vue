@@ -3,7 +3,7 @@
 		:title="isDialogFormUpdateMode? '編輯用戶' : '新增用戶'"
 		:visible="isDialogVisible"
 		@close="handleCloseDialog()"
-		class="user-dialog"
+		class="dialog__user"
 	>
 		<el-form
 			ref="form"
@@ -18,10 +18,7 @@
 			<Remark />
 			<EnableStatus />
 		</el-form>
-		<div
-			slot="footer"
-			class="dialog-footer"
-		>
+		<div slot="footer">
 			<el-button
 				size="small"
 				@click="handleCloseDialog()"

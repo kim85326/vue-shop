@@ -66,15 +66,6 @@ export default {
 	margin-top: 20px;
 }
 
-.user-dialog .el-dialog {
-	width: 540px;
-}
-
-.user-dialog .el-input,
-.user-dialog .el-textarea {
-	width: 250px;
-}
-
 .error input {
 	border: 1px solid red;
 }
