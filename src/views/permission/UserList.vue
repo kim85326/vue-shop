@@ -33,9 +33,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.error input {
-	border: 1px solid red;
-}
-</style>
