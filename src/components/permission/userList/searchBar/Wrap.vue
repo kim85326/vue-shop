@@ -1,12 +1,12 @@
 <template>
 	<el-card shadow="never">
 		<div class="search-bar">
-			<div class="search-bar-header">
-				<div class="search-bar-title">
+			<div class="search-bar__header">
+				<div class="search-bar__title">
 					<i class="el-icon-search"></i>
 					<span>篩選搜尋</span>
 				</div>
-				<div class="search-bar-operation">
+				<div>
 					<el-button
 						size="mini"
 						@click="handleReset"
@@ -22,7 +22,7 @@
 					</el-button>
 				</div>
 			</div>
-			<div class="search-bar-body">
+			<div class="search-bar__body">
 				<el-form :inline="true">
 					<Keyword />
 				</el-form>

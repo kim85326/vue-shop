@@ -1,0 +1,24 @@
+.search-bar {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__title {
+    display: flex;
+
+    i {
+      margin-right: 6px;
+    }
+  }
+
+  &__body {
+    margin-top: 8px;
+    padding-left: 32px;
+  }
+
+  .el-form--inline .el-form-item {
+    margin-bottom: 0;
+  }
+}
