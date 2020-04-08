@@ -1,3 +1,11 @@
-.error input {
-  border: 1px solid red;
+.error {
+  input {
+    border: 1px solid red;
+  }
+
+  .el-checkbox {
+    &__inner {
+      border: 1px solid red;
+    }
+  }
 }
