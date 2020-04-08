@@ -9,4 +9,15 @@
       width: 250px;
     }
   }
+
+  &__role {
+    .el-dialog {
+      width: 540px;
+    }
+
+    .el-input,
+    .el-textarea {
+      width: 250px;
+    }
+  }
 }
