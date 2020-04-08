@@ -11,6 +11,7 @@
 			label-width="150px"
 		>
 			<Name />
+			<Description />
 		</el-form>
 		<div slot="footer">
 			<el-button
@@ -29,6 +30,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
 import Name from "./Name.vue";
+import Description from "./Description.vue";
 
 export default {
 	$_veeValidate: {
@@ -36,6 +38,7 @@ export default {
 	},
 	components: {
 		Name,
+		Description,
 	},
 	methods: {
 		...mapActions("role", [
