@@ -10,7 +10,7 @@
 			size="small"
 			label-width="150px"
 		>
-			<!-- TODO: 待實作表單元件 -->
+			<Name />
 		</el-form>
 		<div slot="footer">
 			<el-button
@@ -28,10 +28,14 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
+import Name from "./Name.vue";
 
 export default {
 	$_veeValidate: {
 		validator: "new"
+	},
+	components: {
+		Name,
 	},
 	methods: {
 		...mapActions("role", [
