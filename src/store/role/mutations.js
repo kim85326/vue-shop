@@ -1,3 +1,4 @@
+import { updateField } from "vuex-map-fields";
 import permissionList from "@/common/permissionList";
 
 const defaultDialogForm = {
@@ -21,6 +22,8 @@ export const state = {
 };
 
 export const mutations = {
+  updateField,
+
   // Summaries
   setRolesSummaries(state, rolesSummaries) {
     state.rolesSummaries = rolesSummaries;

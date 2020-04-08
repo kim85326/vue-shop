@@ -1,4 +1,8 @@
+import { getField } from "vuex-map-fields";
+
 export default {
+  getField,
+
   // Dialog
   isDialogFormUpdateMode(state) {
     return state.dialogForm.id !== 0;
