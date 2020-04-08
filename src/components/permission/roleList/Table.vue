@@ -38,10 +38,11 @@
 			width="120"
 			align="center"
 		>
-			<template>
+			<template slot-scope="scope">
 				<el-button
 					size="mini"
 					type="text"
+					@click="handleUpdate(scope.row)"
 				>
 					編輯
 				</el-button>
@@ -63,6 +64,14 @@ export default {
 	computed: {
 		...mapState("role", ["roles", "isListLoading"])
 	},
+
+	methods: {
+		handleUpdate(row) {
+			this.$store.commit("role/setDialogVisible", true);
+			this.$store.commit("role/setDialogForm", { ...row });
+		},
+	},
+
 	created() {
 		this.$store.dispatch("role/fetchRoles");
 	}
