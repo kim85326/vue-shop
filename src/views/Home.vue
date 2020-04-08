@@ -11,7 +11,7 @@
 				<Header />
 			</el-header>
 			<el-main class="home__main">
-				<UserList></UserList>
+				<router-view />
 			</el-main>
 		</el-container>
 	</el-container>
@@ -20,13 +20,11 @@
 <script>
 import Aside from "@/components/home/Aside.vue";
 import Header from "@/components/home/Header.vue";
-import UserList from "./permission/UserList.vue";
 
 export default {
 	components: {
 		Aside,
 		Header,
-		UserList
 	}
 };
 </script>
