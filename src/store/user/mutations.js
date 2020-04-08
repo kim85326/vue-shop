@@ -1,7 +1,7 @@
 import Vue from "vue";
 import { updateField } from "vuex-map-fields";
 
-import getPaginationFromHeaders from "../../utils/headers";
+import getPaginationFromHeaders from "../../common/headers";
 
 const defaultListQuery = {
   keyword: undefined

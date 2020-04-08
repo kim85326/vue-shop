@@ -1,5 +1,5 @@
 import { Message, MessageBox } from "element-ui";
-import request from "@/utils/request";
+import request from "@/common/request";
 
 export default {
   // List

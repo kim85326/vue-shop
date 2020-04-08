@@ -1,4 +1,4 @@
-import request from "@/utils/request";
+import request from "@/common/request";
 
 export default {
   async fetchSummaries({ commit }) {
@@ -19,5 +19,5 @@ export default {
     }
 
     commit("setListLoading", false);
-  },
+  }
 };
