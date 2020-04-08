@@ -12,6 +12,7 @@
 		>
 			<Name />
 			<Description />
+			<Permissions />
 		</el-form>
 		<div slot="footer">
 			<el-button
@@ -31,6 +32,7 @@
 import { mapState, mapGetters, mapActions } from "vuex";
 import Name from "./Name.vue";
 import Description from "./Description.vue";
+import Permissions from "./Permissions.vue";
 
 export default {
 	$_veeValidate: {
@@ -39,6 +41,7 @@ export default {
 	components: {
 		Name,
 		Description,
+		Permissions,
 	},
 	methods: {
 		...mapActions("role", [
