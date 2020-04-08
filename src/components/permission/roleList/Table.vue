@@ -49,6 +49,7 @@
 				<el-button
 					size="mini"
 					type="text"
+					@click="deleteRole(scope.row)"
 				>
 					刪除
 				</el-button>
@@ -58,7 +59,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
 	computed: {
@@ -66,6 +67,10 @@ export default {
 	},
 
 	methods: {
+		...mapActions("role", [
+			"deleteRole",
+		]),
+
 		handleUpdate(row) {
 			this.$store.commit("role/setDialogVisible", true);
 			this.$store.commit("role/setDialogForm", { ...row });
