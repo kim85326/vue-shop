@@ -43,6 +43,15 @@ export default {
 	methods: {
 		...mapMutations("role", ["setDialogFormPermissions"]),
 
+		checkReadPermission() {
+			// 當管理集合被勾選時，讀取權限也需勾選
+			const halfCheckedNodes = this.$refs.tree.getHalfCheckedNodes();
+			halfCheckedNodes.forEach(node => {
+				const readPermission = `${node.name}-read`;
+				this.$refs.tree.setChecked(readPermission, true);
+			});
+		},
+
 		valid(permissions) {
 			if (permissions.length === 0) {
 				this.$validator.errors.add({
@@ -56,6 +65,8 @@ export default {
 		},
 
 		handleCheck() {
+			this.checkReadPermission();
+
 			const checkedNodes = this.$refs.tree.getCheckedNodes();
 			const leafCheckedNodes = checkedNodes.filter((node) => !node.children);
 			const permissions = leafCheckedNodes.map((node) => (node.name));
