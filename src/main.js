@@ -13,6 +13,16 @@ Vue.use(VeeValidate, { inject: false });
 Vue.config.productionTip = false;
 axios.defaults.baseURL = "http://localhost:3000/api/v1/";
 
+router.beforeEach((to, from, next) => {
+  if (to.meta && to.meta.title) {
+    document.title = to.meta.title;
+  } else {
+    document.title = "Vue Shop";
+  }
+
+  next();
+});
+
 new Vue({
   router,
   store,

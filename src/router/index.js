@@ -11,10 +11,12 @@ const routes = [
     children: [
       {
         path: "/user",
+        meta: { title: "用戶列表" },
         component: () => import("@/views/permission/UserList")
       },
       {
         path: "/role",
+        meta: { title: "角色列表" },
         component: () => import("@/views/permission/RoleList")
       }
     ]
