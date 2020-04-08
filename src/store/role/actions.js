@@ -22,6 +22,21 @@ export default {
     commit("setListLoading", false);
   },
 
+  async deleteRole({ dispatch }, row) {
+    await MessageBox.confirm("是否刪除該角色？", "提示", {
+      confirmButtonText: "確定",
+      cancelButtonText: "取消",
+      type: "warning"
+    });
+
+    const { status } = await request("delete", `/roles/${row.id}`);
+
+    if (status === 204) {
+      Message.success({ message: "刪除成功" });
+      dispatch("fetchRoles");
+    }
+  },
+
   // Dialog
   async handleSubmitDialog({ state, getters, dispatch, commit }, validator) {
     await validator.validateAll();
