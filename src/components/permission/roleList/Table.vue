@@ -57,17 +57,14 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 
 export default {
 	computed: {
 		...mapState("role", ["roles", "isListLoading"])
 	},
-	methods: {
-		...mapActions("role", ["fetchRoles"])
-	},
 	created() {
-		this.fetchRoles();
+		this.$store.dispatch("role/fetchRoles");
 	}
 };
 </script>
