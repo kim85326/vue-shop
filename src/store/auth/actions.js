@@ -20,5 +20,15 @@ export default {
       const redirectPath = router.query && router.query.redirect ? router.query.redirect : "/";
       router.push(redirectPath);
     }
+  },
+
+  async logout({ commit }) {
+    const { status } = await request("delete", "/auth");
+
+    if (status === 204) {
+      localStorage.removeItem("token");
+      commit("resetCurrentUser");
+      router.push("/login");
+    }
   }
 };
