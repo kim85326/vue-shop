@@ -1,6 +1,16 @@
 import axios from "axios";
 import { Message } from "element-ui";
 
+axios.interceptors.request.use(config => {
+  const newConfig = { ...config };
+
+  if (localStorage.getItem("token")) {
+    newConfig.headers["x-access-token"] = localStorage.getItem("token");
+  }
+
+  return newConfig;
+});
+
 const request = async (method, url, options = {}) => {
   try {
     const { data, status, headers } = await axios({
