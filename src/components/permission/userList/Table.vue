@@ -52,6 +52,7 @@
 		>
 			<template slot-scope="scope">
 				<el-switch
+					:disabled="scope.row.username === currentUser.username"
 					:value="scope.row.isEnabled"
 					@change="toggleEnabled(scope.row)"
 				>
