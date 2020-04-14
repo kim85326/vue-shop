@@ -11,6 +11,7 @@
 						placeholder="請輸入帳號"
 						v-model="username"
 						name="username"
+						@keyup.enter.native="handleSubmit"
 					>
 						<span slot="prefix">
 							<i class="el-icon-user-solid"></i>
@@ -23,6 +24,7 @@
 						v-model="password"
 						show-password
 						name="password"
+						@keyup.enter.native="handleSubmit"
 					>
 						<span slot="prefix">
 							<i class="el-icon-lock"></i>
@@ -33,6 +35,7 @@
 					<el-button
 						type="primary"
 						class="login-form__button"
+						@click="handleSubmit"
 					>
 						登入
 					</el-button>
@@ -43,6 +46,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
 	data() {
 		return {
@@ -50,5 +55,15 @@ export default {
 			password: ""
 		};
 	},
+	methods: {
+		...mapActions("auth", ["login"]),
+		handleSubmit() {
+			this.login({
+				username: this.username,
+				password: this.password
+			});
+		}
+	}
+
 };
 </script>
