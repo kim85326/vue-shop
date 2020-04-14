@@ -1,4 +1,5 @@
 import request from "@/common/request";
+import router from "@/router";
 
 export default {
   async getCurrentUser({ commit }) {
@@ -6,6 +7,18 @@ export default {
 
     if (status === 200) {
       commit("setCurrentUser", data);
+    }
+  },
+
+  async login({ dispatch }, { username, password }) {
+    // TODO: 驗證參數
+    const { status, data } = await request("post", "/auth", { data: { username, password } });
+
+    if (status === 200) {
+      localStorage.setItem("token", data.token);
+      await dispatch("getCurrentUser");
+      const redirectPath = router.query && router.query.redirect ? router.query.redirect : "/";
+      router.push(redirectPath);
     }
   }
 };
