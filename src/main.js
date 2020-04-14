@@ -13,7 +13,11 @@ Vue.use(VeeValidate, { inject: false });
 Vue.config.productionTip = false;
 axios.defaults.baseURL = "http://localhost:3000/api/v1/";
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  if (localStorage.getItem("token") && store.getters["auth/isLoggedIn"] === false) {
+    await store.dispatch("auth/getCurrentUser");
+  }
+
   if (to.meta && to.meta.title) {
     document.title = to.meta.title;
   } else {
