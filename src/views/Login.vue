@@ -10,7 +10,9 @@
 					<el-input
 						placeholder="請輸入帳號"
 						v-model="username"
+						v-validate="{ required: true }"
 						name="username"
+						:class="{ error: errors.has('username') }"
 						@keyup.enter.native="handleSubmit"
 					>
 						<span slot="prefix">
@@ -23,7 +25,9 @@
 						placeholder="請輸入密碼"
 						v-model="password"
 						show-password
+						v-validate="{ required: true }"
 						name="password"
+						:class="{ error: errors.has('password') }"
 						@keyup.enter.native="handleSubmit"
 					>
 						<span slot="prefix">
@@ -49,6 +53,9 @@
 import { mapActions } from "vuex";
 
 export default {
+	$_veeValidate: {
+		validator: "new",
+	},
 	data() {
 		return {
 			username: "",
@@ -60,7 +67,8 @@ export default {
 		handleSubmit() {
 			this.login({
 				username: this.username,
-				password: this.password
+				password: this.password,
+				validator: this.$validator
 			});
 		}
 	}

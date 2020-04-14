@@ -10,8 +10,13 @@ export default {
     }
   },
 
-  async login({ dispatch }, { username, password }) {
-    // TODO: 驗證參數
+  async login({ dispatch }, { username, password, validator }) {
+    await validator.validateAll();
+
+    if (validator.errors.items.length > 0) {
+      return;
+    }
+
     const { status, data } = await request("post", "/auth", { data: { username, password } });
 
     if (status === 200) {
