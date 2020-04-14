@@ -7,7 +7,15 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/login",
-    component: () => import("@/views/Login")
+    component: () => import("@/views/Login"),
+    beforeEnter: (to, from, next) => {
+      // 有登入，不可以去登入頁面
+      if (localStorage.getItem("token")) {
+        next({ path: "/" });
+      } else {
+        next();
+      }
+    }
   },
   {
     path: "/",
