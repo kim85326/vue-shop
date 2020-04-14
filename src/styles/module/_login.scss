@@ -1,0 +1,45 @@
+.login {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &-form {
+    width: 360px;
+    border-top: 10px solid #409eff;
+
+    &__logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 64px;
+      color: #409eff;
+    }
+
+    &__title {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin: 24px auto;
+      color: #409eff;
+    }
+
+    &__button-group {
+      text-align: center;
+    }
+
+    &__button {
+      width: 35%;
+    }
+
+    .el-input--prefix .el-input__inner {
+      padding-left: 45px;
+    }
+
+    .el-input__prefix {
+      padding-left: 10px;
+      font-size: 18px;
+      color: #409eff;
+    }
+  }
+}
