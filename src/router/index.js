@@ -1,6 +1,5 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
@@ -19,7 +18,18 @@ const routes = [
   },
   {
     path: "/",
-    component: Home,
+    component: () => import("@/views/Home"),
+    beforeEnter: (to, from, next) => {
+      // 未登入，需導到登入頁
+      if (!localStorage.getItem("token")) {
+        next({
+          path: "/login",
+          query: { redirect: to.fullPath }
+        });
+      } else {
+        next();
+      }
+    },
     children: [
       {
         path: "/user",
