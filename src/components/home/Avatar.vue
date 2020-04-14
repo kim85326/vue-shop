@@ -5,12 +5,21 @@
 			<i class="el-icon-arrow-down el-icon--right"></i>
 		</span>
 		<el-dropdown-menu slot="dropdown">
-			<el-dropdown-item>登出</el-dropdown-item>
+			<el-dropdown-item>
+				<div @click="logout">
+					登出
+				</div>
+			</el-dropdown-item>
 		</el-dropdown-menu>
 	</el-dropdown>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
+	methods: {
+		...mapActions("auth", ["logout"])
+	}
 };
 </script>
