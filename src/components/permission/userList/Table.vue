@@ -74,6 +74,7 @@
 				<el-button
 					size="mini"
 					type="text"
+					v-if="scope.row.username !== currentUser.username"
 					@click="deleteUser(scope.row)"
 				>
 					刪除
@@ -88,6 +89,7 @@ import { mapState, mapActions } from "vuex";
 
 export default {
 	computed: {
+		...mapState("auth", ["currentUser"]),
 		...mapState("user", ["users", "isListLoading"])
 	},
 	methods: {
