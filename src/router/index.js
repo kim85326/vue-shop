@@ -6,30 +6,11 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/login",
-    component: () => import("@/views/Login"),
-    beforeEnter: (to, from, next) => {
-      // 有登入，不可以去登入頁面
-      if (localStorage.getItem("token")) {
-        next({ path: "/" });
-      } else {
-        next();
-      }
-    }
+    component: () => import("@/views/Login")
   },
   {
     path: "/",
     component: () => import("@/views/Home"),
-    beforeEnter: (to, from, next) => {
-      // 未登入，需導到登入頁
-      if (!localStorage.getItem("token")) {
-        next({
-          path: "/login",
-          query: { redirect: to.fullPath }
-        });
-      } else {
-        next();
-      }
-    },
     children: [
       {
         path: "/user",

@@ -14,17 +14,31 @@ Vue.config.productionTip = false;
 axios.defaults.baseURL = "http://localhost:3000/api/v1/";
 
 router.beforeEach(async (to, from, next) => {
-  if (localStorage.getItem("token") && store.getters["auth/isLoggedIn"] === false) {
-    await store.dispatch("auth/getCurrentUser");
-  }
-
+  // 設定標題
   if (to.meta && to.meta.title) {
     document.title = to.meta.title;
   } else {
     document.title = "Vue Shop";
   }
 
-  next();
+  const hasToken = localStorage.getItem("token") !== null;
+
+  if (hasToken === true && store.getters["auth/isLoggedIn"] === false) {
+    await store.dispatch("auth/getCurrentUser");
+  }
+
+  // 有登入，不可以去登入頁面
+  if (hasToken === true && to.path === "/login") {
+    next("/");
+  } else if (hasToken === false && to.path !== "/login") {
+    // 未登入，需導到登入頁
+    next({
+      path: "/login",
+      query: { redirect: to.fullPath }
+    });
+  } else {
+    next();
+  }
 });
 
 new Vue({
