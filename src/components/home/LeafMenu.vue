@@ -1,5 +1,8 @@
 <template>
-	<el-menu-item :index="menu.name">
+	<el-menu-item
+		:index="menu.name"
+		:route="menu"
+	>
 		<i :class="menu.icon">
 		</i>
 		<span>{{menu.displayName}}</span>

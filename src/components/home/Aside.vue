@@ -1,9 +1,12 @@
 <template>
 	<div class="aside">
 		<el-menu
+			:default-active="$route.name"
 			background-color="#304156"
 			text-color="#bfcbd9"
 			active-text-color="#409eff"
+			:router="true"
+			:unique-opened="true"
 		>
 			<el-menu-item>
 				<i class="el-icon-s-home"></i>
