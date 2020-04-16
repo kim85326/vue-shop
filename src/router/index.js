@@ -23,6 +23,10 @@ const routes = [
         component: () => import("@/views/permission/RoleList")
       }
     ]
+  },
+  {
+    path: "*",
+    component: () => import("@/views/NotFound")
   }
 ];
 
