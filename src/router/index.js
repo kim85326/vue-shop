@@ -1,7 +1,31 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import menuList from "@/common/menuList";
 
 Vue.use(VueRouter);
+
+const generateRoute = menu => {
+  const route = {
+    ...menu,
+    path: menu.name
+  };
+
+  if (menu.children === undefined) {
+    return {
+      ...route,
+      meta: {
+        title: menu.displayName
+      },
+      component: () => import(`@/views/${menu.folder}/${menu.name}`)
+    };
+  }
+
+  return {
+    ...route,
+    component: () => import("@/components/common/RouterTemplate"),
+    children: menu.children.map(subMenu => generateRoute(subMenu))
+  };
+};
 
 const routes = [
   {
@@ -11,18 +35,7 @@ const routes = [
   {
     path: "/",
     component: () => import("@/views/Home"),
-    children: [
-      {
-        path: "/user",
-        meta: { title: "用戶列表" },
-        component: () => import("@/views/permission/UserList")
-      },
-      {
-        path: "/role",
-        meta: { title: "角色列表" },
-        component: () => import("@/views/permission/RoleList")
-      }
-    ]
+    children: menuList.map(menu => generateRoute(menu))
   },
   {
     path: "*",
