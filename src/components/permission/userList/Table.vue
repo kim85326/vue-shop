@@ -60,12 +60,14 @@
 			</template>
 		</el-table-column>
 		<el-table-column
+			v-if="hasUpdatePermission || hasDeletePermission"
 			label="操作"
 			width="120"
 			align="center"
 		>
 			<template slot-scope="scope">
 				<el-button
+					v-if="hasUpdatePermission"
 					size="mini"
 					type="text"
 					@click="handleUpdate(scope.row)"
@@ -73,9 +75,9 @@
 					編輯
 				</el-button>
 				<el-button
+					v-if="hasDeletePermission && (scope.row.username !== currentUser.username)"
 					size="mini"
 					type="text"
-					v-if="scope.row.username !== currentUser.username"
 					@click="deleteUser(scope.row)"
 				>
 					刪除
@@ -89,6 +91,12 @@
 import { mapState, mapActions } from "vuex";
 
 export default {
+	data() {
+		return {
+			hasUpdatePermission: false,
+			hasDeletePermission: false,
+		};
+	},
 	computed: {
 		...mapState("auth", ["currentUser"]),
 		...mapState("user", ["users", "isListLoading"])
@@ -103,8 +111,10 @@ export default {
 			this.$store.commit("user/setDialogForm", { ...row });
 		},
 	},
-	created() {
+	async created() {
 		this.$store.dispatch("user/fetchList");
+		this.hasUpdatePermission = await this.$store.dispatch("auth/hasPermission", "user-update");
+		this.hasDeletePermission = await this.$store.dispatch("auth/hasPermission", "user-delete");
 	}
 };
 </script>

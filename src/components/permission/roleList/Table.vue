@@ -34,12 +34,14 @@
 		>
 		</el-table-column>
 		<el-table-column
+			v-if="hasUpdatePermission || hasDeletePermission"
 			label="操作"
 			width="120"
 			align="center"
 		>
 			<template slot-scope="scope">
 				<el-button
+					v-if="hasUpdatePermission"
 					size="mini"
 					type="text"
 					@click="handleUpdate(scope.row)"
@@ -47,6 +49,7 @@
 					編輯
 				</el-button>
 				<el-button
+					v-if="hasDeletePermission"
 					size="mini"
 					type="text"
 					@click="deleteRole(scope.row)"
@@ -62,6 +65,13 @@
 import { mapState, mapActions } from "vuex";
 
 export default {
+	data() {
+		return {
+			hasUpdatePermission: false,
+			hasDeletePermission: false,
+		};
+	},
+
 	computed: {
 		...mapState("role", ["roles", "isListLoading"])
 	},
@@ -77,8 +87,10 @@ export default {
 		},
 	},
 
-	created() {
+	async created() {
 		this.$store.dispatch("role/fetchRoles");
+		this.hasUpdatePermission = await this.$store.dispatch("auth/hasPermission", "role-update");
+		this.hasDeletePermission = await this.$store.dispatch("auth/hasPermission", "role-delete");
 	}
 };
 </script>
