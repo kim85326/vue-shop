@@ -7,15 +7,15 @@ Vue.use(VueRouter);
 const generateRoute = menu => {
   const route = {
     ...menu,
-    path: menu.name
+    path: menu.name,
+    meta: {
+      title: menu.displayName
+    }
   };
 
   if (menu.children === undefined) {
     return {
       ...route,
-      meta: {
-        title: menu.displayName
-      },
       component: () => import(`@/views/${menu.folder}/${menu.name}`)
     };
   }
@@ -23,6 +23,7 @@ const generateRoute = menu => {
   return {
     ...route,
     component: () => import("@/components/common/RouterTemplate"),
+    redirect: menu.children[0],
     children: menu.children.map(subMenu => generateRoute(subMenu))
   };
 };
@@ -39,6 +40,9 @@ const routes = [
       {
         path: "/",
         name: "Home",
+        meta: {
+          title: "首頁"
+        },
         component: () => import("@/views/Dashboard")
       },
       ...menuList.map(menu => generateRoute(menu))
