@@ -8,13 +8,15 @@ const menuList = [
         name: "UserList",
         displayName: "用戶列表",
         icon: "el-icon-user-solid",
-        folder: "permission"
+        folder: "permission",
+        permission: "user-read"
       },
       {
         name: "RoleList",
         displayName: "角色列表",
         icon: "el-icon-user",
-        folder: "permission"
+        folder: "permission",
+        permission: "role-read"
       }
     ]
   }

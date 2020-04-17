@@ -35,5 +35,15 @@ export default {
       commit("resetCurrentUser");
       router.push("/login");
     }
+  },
+
+  async hasPermission({ state }, targetPermission) {
+    const { permissions } = state.currentUser.role;
+
+    if (permissions.find(permission => permission === targetPermission)) {
+      return true;
+    }
+
+    return false;
   }
 };
