@@ -8,7 +8,10 @@
 			:router="true"
 			:unique-opened="true"
 		>
-			<el-menu-item>
+			<el-menu-item
+				index="Home"
+				route="/"
+			>
 				<i class="el-icon-s-home"></i>
 				<span slot="title">首頁</span>
 			</el-menu-item>

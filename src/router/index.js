@@ -35,7 +35,14 @@ const routes = [
   {
     path: "/",
     component: () => import("@/views/Home"),
-    children: menuList.map(menu => generateRoute(menu))
+    children: [
+      {
+        path: "/",
+        name: "Home",
+        component: () => import("@/views/Dashboard")
+      },
+      ...menuList.map(menu => generateRoute(menu))
+    ]
   },
   {
     path: "*",
