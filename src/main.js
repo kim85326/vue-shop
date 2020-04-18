@@ -12,6 +12,7 @@ import store from "./store";
 Vue.use(ElementUI);
 Vue.use(VeeValidate, { inject: false });
 Vue.use(VueMoment, { moment });
+moment.tz.setDefault("Asia/Taipei");
 
 Vue.config.productionTip = false;
 axios.defaults.baseURL = "http://localhost:3000/api/v1/";
