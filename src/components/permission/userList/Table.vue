@@ -32,18 +32,26 @@
 		>
 		</el-table-column>
 		<el-table-column
-			prop="createdTime"
 			label="建立時間"
 			width="180"
 			align="center"
 		>
+			<template slot-scope="scope">
+				{{scope.row.createdTime | moment("YYYY-MM-DD HH:mm:ss")}}
+			</template>
 		</el-table-column>
 		<el-table-column
-			prop="latestLoginTime"
 			label="最後登入"
 			width="180"
 			align="center"
 		>
+			<template slot-scope="scope">
+				{{
+					scope.row.latestLoginTime? 
+					($moment(scope.row.latestLoginTime).format("YYYY-MM-DD HH:mm:ss"))
+					: null
+				}}
+			</template>
 		</el-table-column>
 		<el-table-column
 			label="是否啟用"

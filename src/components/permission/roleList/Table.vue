@@ -27,11 +27,13 @@
 		>
 		</el-table-column>
 		<el-table-column
-			prop="createdTime"
 			label="建立時間"
 			width="180"
 			align="center"
 		>
+			<template slot-scope="scope">
+				{{scope.row.createdTime | moment("YYYY-MM-DD HH:mm:ss")}}
+			</template>
 		</el-table-column>
 		<el-table-column
 			v-if="hasUpdatePermission || hasDeletePermission"
