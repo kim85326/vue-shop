@@ -2,6 +2,8 @@ import Vue from "vue";
 import ElementUI from "element-ui";
 import VeeValidate from "vee-validate";
 import axios from "axios";
+import VueMoment from "vue-moment";
+import moment from "moment-timezone";
 
 import App from "./App.vue";
 import router from "./router";
@@ -9,6 +11,7 @@ import store from "./store";
 
 Vue.use(ElementUI);
 Vue.use(VeeValidate, { inject: false });
+Vue.use(VueMoment, { moment });
 
 Vue.config.productionTip = false;
 axios.defaults.baseURL = "http://localhost:3000/api/v1/";
