@@ -4,7 +4,7 @@
 		:index="menu.name"
 	>
 		<template slot="title">
-			<i class="el-icon-s-cooperation"></i>
+			<i :class="menu.icon"></i>
 			<span>{{menu.displayName}}</span>
 		</template>
 		<Menu
