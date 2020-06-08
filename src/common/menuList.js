@@ -19,6 +19,20 @@ const menuList = [
         permission: "role-read"
       }
     ]
+  },
+  {
+    name: "MerchandiseManagement",
+    displayName: "商品",
+    icon: "el-icon-s-goods",
+    children: [
+      {
+        name: "CategoryList",
+        displayName: "分類列表",
+        icon: "el-icon-menu",
+        folder: "merchandise",
+        permission: "category-read"
+      }
+    ]
   }
 ];
 
