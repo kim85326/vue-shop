@@ -1,5 +1,19 @@
 <template>
 	<div>
+		<div style="margin-bottom: 20px">
+			<el-button
+				type="mini"
+				@click="expandAll"
+			>
+				全部展開
+			</el-button>
+			<el-button
+				type="mini"
+				@click="collapseAll"
+			>
+				全部收起
+			</el-button>
+		</div>
 		<el-table
 			ref="categoryTable"
 			:data="categories"
@@ -59,14 +73,13 @@
 			<el-table-column
 				v-if="hasUpdatePermission || hasDeletePermission"
 				label="操作"
-				width="120"
+				width="200"
 				align="center"
 			>
 				<template slot-scope="scope">
 					<el-button
 						v-if="hasUpdatePermission"
 						size="mini"
-						type="text"
 						@click="handleUpdate(scope.row)"
 					>
 						編輯
@@ -74,7 +87,7 @@
 					<el-button
 						v-if="hasDeletePermission && scope.row.children.length === 0"
 						size="mini"
-						type="text"
+						type="danger"
 						@click="deleteCategory(scope.row)"
 					>
 						刪除
@@ -82,20 +95,6 @@
 				</template>
 			</el-table-column>
 		</el-table>
-		<div style="margin-top: 20px">
-			<el-button
-				type="mini"
-				@click="expandAll"
-			>
-				全部展開
-			</el-button>
-			<el-button
-				type="mini"
-				@click="collapseAll"
-			>
-				全部收起
-			</el-button>
-		</div>
 	</div>
 </template>
 
