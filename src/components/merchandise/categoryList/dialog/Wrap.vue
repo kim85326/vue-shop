@@ -8,9 +8,11 @@
 		<el-form
 			ref="form"
 			size="small"
-			label-width="70px"
+			label-width="100px"
+			@submit.prevent.native
 		>
 			<Name />
+			<ParentCategory v-if="isDialogFormUpdateMode === false" />
 		</el-form>
 		<div slot="footer">
 			<el-button
@@ -29,6 +31,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
 import Name from "./Name.vue";
+import ParentCategory from "./ParentCategory.vue";
 
 export default {
 	$_veeValidate: {
@@ -36,6 +39,7 @@ export default {
 	},
 	components: {
 		Name,
+		ParentCategory,
 	},
 	methods: {
 		...mapActions("category", [

@@ -2,7 +2,9 @@ import { updateField } from "vuex-map-fields";
 
 const defaultDialogForm = {
   id: 0,
-  name: ""
+  name: "",
+  parentIds: [],
+  parentOptions: []
 };
 
 export const state = {
@@ -34,6 +36,9 @@ export const mutations = {
     state.dialogForm = { ...defaultDialogForm };
   },
   setDialogForm(state, category) {
-    state.dialogForm = category;
+    state.dialogForm = { ...state.dialogForm, ...category };
+  },
+  setDialogFormParentOptions(state, parentOptions) {
+    state.dialogForm.parentOptions = parentOptions;
   }
 };

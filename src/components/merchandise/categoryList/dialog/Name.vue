@@ -1,5 +1,5 @@
 <template>
-	<el-form-item label="名稱：">
+	<el-form-item label="分類名稱：">
 		<el-input
 			v-model="name"
 			v-validate="{ required: true }"

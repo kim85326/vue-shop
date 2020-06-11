@@ -5,7 +5,7 @@ export default {
   async fetchCategories({ commit }) {
     commit("setListLoading", true);
 
-    const { status, data } = await request("get", "/categories");
+    const { status, data } = await request("get", "/categories/tree");
 
     if (status === 200) {
       commit("setCategories", data);
